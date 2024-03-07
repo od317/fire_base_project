@@ -9,3 +9,7 @@
 .dark{
     background-color:blue;
 }
+
+*{
+    outline:none
+}

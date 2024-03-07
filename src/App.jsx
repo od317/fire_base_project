@@ -1,9 +1,11 @@
 import {Routes,Route,Link, BrowserRouter, useLocation} from 'react-router-dom'
 import { useRef, useState } from 'react'
-
+import { getAnalytics } from "firebase/analytics"
+import Home from './pages/Home'
+import Login from './pages/Login'
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from "firebase/app"
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -24,11 +26,10 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 export default function App(){
-
-
-
-
     return(<>
-            appppppppppppppppppppp
+           <Routes>
+              <Route path='/' element={<Home/>}/>
+              <Route path='/login' element={<Login/>}/>
+           </Routes>
     </>)
 }
