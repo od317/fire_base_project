@@ -29,6 +29,6 @@ export default function App(){
 
 
     return(<>
-            App2
+            appppppppppppppppppppp
     </>)
 }
