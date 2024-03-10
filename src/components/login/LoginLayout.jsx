@@ -2,7 +2,7 @@ import React ,{useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import SignIn from './SignIn'
 import Login from './Login'
-import {auth} from '../../firebase'
+import {auth, handleLogInForm, handleSingInForm} from '../../firebase'
 import { signInWithGoogle } from '../../firebase'
 export default function LoginLayout() {
   
@@ -10,11 +10,31 @@ export default function LoginLayout() {
   const [signin,setSignin] = useState(false)  
   const [loading,setLoading] = useState(false)
 
-  const handleSignInFormSubmit =  e=>{
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
 
+  const handleSignInFormSubmit = async e=>{
+        e.preventDefault()
+        try{
+        const res  = await handleSingInForm("",email,password)
+        console.log('res is ',res)
+        if(res.email)
+           navigate('/')
+        }catch(err){
+          console.log('err',err.message)
+        }
   }
 
-  const handleLoginFormSubmit =   e=>{
+ const handleLoginFormSubmit = async e=>{
+        e.preventDefault()
+        try{
+          const res  = await handleLogInForm(email,password)
+          console.log('res is ',res)
+          if(res.email)
+            navigate('/')
+        }catch(err){
+            console.log('err',err.message)
+          }
   }
 
 
@@ -25,7 +45,9 @@ export default function LoginLayout() {
   return (
           <>
               <button onClick={()=>{
-                setSignin(p=>!p)     
+                setSignin(p=>!p)
+                setEmail('')
+                setPassword('')     
               }}>
               {
               !signin ? <>sign in</>:
@@ -45,8 +67,8 @@ export default function LoginLayout() {
               { loading && <button className='animate-spin'>b</button>}
 
               { signin ? 
-              <SignIn handleSignInFromSubmit={handleSignInFormSubmit}/>:
-              <Login handleLoginFromSubmit={handleLoginFormSubmit}/>}
+              <SignIn email={email} handleEmailChange={setEmail} password={password} handlePasswordChange={setPassword} handleSignInFromSubmit={handleSignInFormSubmit}/>:
+              <Login email={email} handleEmailChange={setEmail} password={password} handlePasswordChange={setPassword} handleLoginFromSubmit={handleLoginFormSubmit}/>}
           </>
   )
 }

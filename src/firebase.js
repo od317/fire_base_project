@@ -1,5 +1,5 @@
 import {initializeApp} from "firebase/app"
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { getAnalytics } from "firebase/analytics"
 
 const firebaseConfig = {
@@ -33,6 +33,28 @@ const signInWithGoogle = async () => {
   })
 }
 
+export const handleSingInForm = async (name,email,password)=>{
+      try{
+         const res = await createUserWithEmailAndPassword(auth,email,password)
+         const user = res.user
+        //  await updateProfile(user,{displayName:name})
+        return user
+      }catch(err){
+        console.log('error is ',err.message)
+        return null
+      }
+}
+
+export const handleLogInForm = async (email,password)=>{
+      try{
+      const res = await signInWithEmailAndPassword(auth,email,password)
+      const user = res.user
+      return user
+      }catch(err){
+        console.log('error is ',err.message)
+        return err
+      }
+}
 
 export {
     auth,
