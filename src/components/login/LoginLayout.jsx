@@ -1,21 +1,33 @@
 import React ,{useEffect, useState} from 'react'
-import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../../firebase"
 import { useNavigate } from 'react-router-dom'
 import SignIn from './SignIn'
 import Login from './Login'
-import { useAuthState } from "react-firebase-hooks/auth"
+import {auth} from '../../firebase'
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 
 export default function LoginLayout() {
   
   const navigate = useNavigate()
-  const [signin,setSignin] = useState(false)
-  const [user, loading, error] = useAuthState(auth)
+  const [signin,setSignin] = useState(false)  
+  const [loading,setLoading] = useState(false)
 
   const handleSignInFormSubmit =  e=>{
+
   }
 
   const handleLoginFormSubmit =   e=>{
-}
+  }
+
+  const signInWithGoogle = async () => {
+        const auth = getAuth()
+        const provider = new GoogleAuthProvider()
+        signInWithPopup(auth,provider).then(res=>{
+          console.log('singed in and user is:',res.user)
+          navigate('/')
+        }).catch(err=>{
+          console.log("error",err.message)
+        })
+  }
 
   useEffect(() => {
 

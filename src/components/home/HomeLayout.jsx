@@ -20,7 +20,7 @@ function HomeLayout() {
       <br />
       { user ?
       <>
-      <button onClick={handleLogout}>logout</button>
+      <button onClick={handleLogout}>logout {user.email}</button>
       </>
       :
       <>
