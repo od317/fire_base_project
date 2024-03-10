@@ -18,6 +18,10 @@ const analytics = getAnalytics(app)
 
 const googleProvider = new GoogleAuthProvider()
 
+googleProvider.setCustomParameters({
+  prompt: "select_account"
+})
+
 const auth = getAuth(app)
 
 const signInWithGoogle = async () => {
