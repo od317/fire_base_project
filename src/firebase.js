@@ -1,5 +1,5 @@
 import {initializeApp} from "firebase/app"
-import {GoogleAuthProvider,getAuth,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,sendPasswordResetEmail,signOut} from "firebase/auth"
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { getAnalytics } from "firebase/analytics"
 
 const firebaseConfig = {
@@ -20,9 +20,19 @@ const googleProvider = new GoogleAuthProvider()
 
 const auth = getAuth(app)
 
+const signInWithGoogle = async () => {
+  signInWithPopup(auth,googleProvider).then(res=>{
+    console.log('singed in and user is:',res.user)
+    navigate('/')
+  }).catch(err=>{
+    console.log("error",err.message)
+  })
+}
+
 
 export {
     auth,
+    signInWithGoogle
 }
 
 export default app

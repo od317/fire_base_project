@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import SignIn from './SignIn'
 import Login from './Login'
 import {auth} from '../../firebase'
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
-
+import { signInWithGoogle } from '../../firebase'
 export default function LoginLayout() {
   
   const navigate = useNavigate()
@@ -18,16 +17,6 @@ export default function LoginLayout() {
   const handleLoginFormSubmit =   e=>{
   }
 
-  const signInWithGoogle = async () => {
-        const auth = getAuth()
-        const provider = new GoogleAuthProvider()
-        signInWithPopup(auth,provider).then(res=>{
-          console.log('singed in and user is:',res.user)
-          navigate('/')
-        }).catch(err=>{
-          console.log("error",err.message)
-        })
-  }
 
   useEffect(() => {
 
@@ -46,7 +35,9 @@ export default function LoginLayout() {
               <br />
 
               <button onClick={()=>{
-                signInWithGoogle()
+                if(signInWithGoogle()){
+                  navigate('/')
+                }
               }} className=''>
                 sign in with google
               </button>
