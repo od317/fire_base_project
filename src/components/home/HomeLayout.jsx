@@ -8,7 +8,6 @@ function HomeLayout() {
     try {
       const auth = getAuth()
       await signOut(auth)
-      window.open('https://support.google.com/accounts/answer/32050')
       // Logout successful
     } catch (error) {
       console.error('Error logging out:', error.message)

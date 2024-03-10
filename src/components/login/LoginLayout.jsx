@@ -35,7 +35,7 @@ export default function LoginLayout() {
               <br />
 
               <button onClick={()=>{
-                if(signInWithGoogle()){
+                if(signInWithGoogle().email){
                   navigate('/')
                 }
               }} className=''>
