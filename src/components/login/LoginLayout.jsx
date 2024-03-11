@@ -17,7 +17,6 @@ export default function LoginLayout() {
         e.preventDefault()
         try{
         const res  = await handleSingInForm("",email,password)
-        console.log('res is ',res)
         if(res.email)
            navigate('/')
         }catch(err){
@@ -29,7 +28,6 @@ export default function LoginLayout() {
         e.preventDefault()
         try{
           const res  = await handleLogInForm(email,password)
-          console.log('res is ',res)
           if(res.email)
             navigate('/')
         }catch(err){
