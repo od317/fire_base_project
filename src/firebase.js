@@ -25,9 +25,10 @@ googleProvider.setCustomParameters({
 
 const auth = getAuth(app)
 
-const signInWithGoogle = async () => {
-  signInWithPopup(auth,googleProvider).then(res=>{
+const signInWithGoogle = async (navigate) => {
+    signInWithPopup(auth,googleProvider).then(res=>{
     console.log('singed in and user is:',res.user)
+    navigate('/')
     return res.user
   }).catch(err=>{
     console.log("error",err.message)
