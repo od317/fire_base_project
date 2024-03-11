@@ -3,8 +3,9 @@ import { useRef, useState,useEffect } from 'react'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import {userContext} from './context/userContext'
-import {auth} from './firebase'
+import app,{auth} from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
+import { getRedirectResult } from 'firebase/auth'
 
 export default function App(){
   const [user,setUser] = useState(null)
