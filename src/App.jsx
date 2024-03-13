@@ -8,7 +8,6 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { getRedirectResult } from 'firebase/auth'
 
 export default function App(){
-  
   const [user,setUser] = useState(null)
   const [loadingForUser,setLoadingForUser] = useState(true)
   
