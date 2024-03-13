@@ -1,14 +1,18 @@
-import React ,{useEffect, useState} from 'react'
+import React ,{useContext, useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import SignIn from './SignIn'
 import Login from './Login'
 import {auth, handleLogInForm, handleSingInForm} from '../../firebase'
 import { signInWithGoogle } from '../../firebase'
+import { userContext } from '../../context/userContext'
 export default function LoginLayout() {
   
   const navigate = useNavigate()
   const [signin,setSignin] = useState(false)  
   const [loading,setLoading] = useState(false)
+  
+  const user = useContext(userContext)
+  
 
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
@@ -37,10 +41,13 @@ export default function LoginLayout() {
 
 
   useEffect(() => {
-
+       if(user)
+         navigate('/')
   }, [])
 
-  return (
+  return (<>
+        
+        { user ? <>logged in</> :         
           <>
               <button onClick={()=>{
                 setSignin(p=>!p)
@@ -65,6 +72,7 @@ export default function LoginLayout() {
               { signin ? 
               <SignIn email={email} handleEmailChange={setEmail} password={password} handlePasswordChange={setPassword} handleSignInFromSubmit={handleSignInFormSubmit}/>:
               <Login email={email} handleEmailChange={setEmail} password={password} handlePasswordChange={setPassword} handleLoginFromSubmit={handleLoginFormSubmit}/>}
+          </>}
           </>
   )
 }

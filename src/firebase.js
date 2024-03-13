@@ -1,5 +1,5 @@
 import {initializeApp} from "firebase/app"
-import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signInWithPopup } from "firebase/auth"
+import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword,signInWithRedirect, updateProfile, signInWithPopup } from "firebase/auth"
 import { getAnalytics } from "firebase/analytics"
 import { getAuth } from "firebase/auth"
 
@@ -26,7 +26,7 @@ googleProvider.setCustomParameters({
 const auth = getAuth(app)
 
 const signInWithGoogle = async (navigate) => {
-    signInWithPopup(auth,googleProvider).then(res=>{
+  signInWithRedirect(auth,googleProvider).then(res=>{
     navigate('/')
     return res.user
   }).catch(err=>{
