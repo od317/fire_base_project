@@ -6,13 +6,14 @@
         "source": "**/*",
         "headers": [
           {
-            "key": "Cross-Origin-Embedder-Policy",
-            "value": "unsafe-none"
-          }, 
-          {
             "key": "Access-Control-Allow-Origin",
             "value": "*"
-        }
+          },
+          {
+            "origin": ["*"],
+            "method": ["GET"],
+            "maxAgeSeconds": 3600
+          }
         ]
       }
     ],
