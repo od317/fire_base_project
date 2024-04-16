@@ -1,33 +1,15 @@
-import React, { useContext } from 'react'
-import { getAuth,signOut} from 'firebase/auth'
-import {userContext} from '../../context/userContext'
-import { NavLink } from 'react-router-dom'
+import React from 'react'
+import PostsList from '../../features/Posts/PostsList'
+import AddPostForm from '../../features/Posts/AddPostForm'
+import PostForm from './PostForm'
 function HomeLayout() {
-  const user = useContext(userContext)
-  const handleLogout = async () => {
-    try {
-      const auth = getAuth()
-      await signOut(auth)
-      // Logout successful
-    } catch (error) {
-      console.error('Error logging out:', error.message)
-    }
-  }
-
   return (
-    <div>
-      home
+    <div className='w-full flex flex-col items-center justify-center'>
+      home page
       <br />
-      { user ?
-      <>
-      <button onClick={handleLogout}>logout {user.email}</button>
-      </>
-      :
-      <>
-        <NavLink to={'/login'}>login</NavLink>
-      </>
-      }
-      </div>
+      <PostForm></PostForm>
+      <PostsList></PostsList>
+    </div>
   )
 }
 
