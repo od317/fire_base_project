@@ -3,6 +3,7 @@ import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndP
 import { getAnalytics } from "firebase/analytics"
 import { getAuth } from "firebase/auth"
 import {getFirestore,addDoc,collection,getDocs, getDoc,updateDoc, doc,onSnapshot, deleteDoc, query,orderBy, serverTimestamp} from 'firebase/firestore'
+import {getStorage} from 'firebase/storage'
 import {v4 as uuid} from 'uuid'
 
 const firebaseConfig = {
@@ -19,6 +20,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
 export const db = getFirestore(app) 
+export const storage = getStorage(app)
 
 const googleProvider = new GoogleAuthProvider()
 
@@ -28,6 +30,7 @@ googleProvider.setCustomParameters({
 
 const auth = getAuth(app)
 
+const usersRef = collection(db,'users')
 
 
 const signInWithGoogle = async () => {
@@ -38,11 +41,17 @@ const signInWithGoogle = async () => {
   })
 }
 
+
 export const handleSingInForm = async (name,email,password)=>{
       try{
          const res = await createUserWithEmailAndPassword(auth,email,password)
          const user = res.user
-        //  await updateProfile(user,{displayName:name})
+         await updateProfile(user,{name:name})
+         addDoc(usersRef,{
+               name:user.displayName,
+               uid:user.uid,
+               email:user.email
+         })
         return user
       }catch(err){
         console.log('error is ',err.message)
@@ -66,6 +75,7 @@ const messageRef = collection(db,'messages')
 export const sendMessage = async (message)=>{
              try {
               message.createdAt = serverTimestamp()
+              const nnMessageRef = collection(db,'messages/')
               const newMesasgeRef = await addDoc(messageRef,message)
 
               const newMessage = await getDoc(newMesasgeRef)
@@ -133,6 +143,19 @@ export const editMessage = async (messageId,newMessage)=>{
        const message = doc(db,'messages',messageId)
        await updateDoc(message,newMessage)
        return true 
+}
+
+export const subCollectionTest = async ()=>{
+       try{
+       const userRef = doc(db,'users','uNIseyUVGaVSn8zFEU1Bok59UqE3')
+       const userMessagesRef = collection(userRef,'messages')
+       await addDoc(userMessagesRef,{
+        title:'hello'
+       })
+       console.log('meseages added succssfully')
+      }catch(err){
+        console.log('err',err)
+      }
 }
 
 // export const unsubscribeMessageList = getDocs(messageRef).onSnapshot(snapshot => {

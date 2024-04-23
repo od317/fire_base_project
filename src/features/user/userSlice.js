@@ -21,10 +21,12 @@ export const userSlice = createSlice({
        name:'user',
        reducers:{
               login:(state,action)=>{
+                     console.log('logged in ',action.payload)
                      state.value.user = action.payload
               },
               logout:(state)=>{
-                     state = null
+                     console.log('logging out')
+                     state.value.user = null
               }
        },
        extraReducers(builder){

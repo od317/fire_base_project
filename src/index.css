@@ -2,14 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-.light{
-    background: red;
-}
-
-.dark{
-    background-color:blue;
+body{
+    overflow-x: hidden;
 }
 
 *{
-    outline:none
+    outline:none;
+    box-sizing:content-box;
 }
