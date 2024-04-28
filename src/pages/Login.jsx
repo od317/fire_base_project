@@ -14,10 +14,16 @@ function Login() {
     const logIn = async (email,password)=>{
         try{
           console.log('starting to login')
-          await handleLogInForm(email,password)
-          navigate('/')
+          let  res = await handleLogInForm(email,password)
+          if (res){
+            navigate('/')
+            return true
+          }
+          else
+            return false
         }catch(err){
           console.log(err)
+          return false
         }
     }
 

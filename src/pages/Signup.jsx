@@ -12,8 +12,8 @@ function SignUp() {
     const signIn = async (name,email,password)=>{
           try{
           console.log('starting to signUp')
-          await handleSingInForm(name,email,password)
-          navigate('/')
+          let res = await handleSingInForm(name,email,password)
+          if(res) navigate('/')
           }
           catch(err){
             console.log(err)

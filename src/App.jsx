@@ -34,7 +34,6 @@ export default function App(){
     
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if(user){
-        console.log('real user is',user)
         dispatch(login({
           name:user.displayName ? user.displayName : '',
           email:user.email,
@@ -43,7 +42,7 @@ export default function App(){
         }))
       }
       else{
-         console.log('no user log out')
+         navigate('/login')
          dispatch(logout())
       }
       setLoadingForUser(false)
@@ -72,7 +71,7 @@ export default function App(){
                               <LoginSign></LoginSign>}
           </div> */}
 
-          <div className={` bg-bg1 min-h-screen max-w-screen px-[2%] pt-[2%] text-white`}>
+          <div className={` bg-bg1 min-h-screen  max-h-screen overflow-y-hidden max-w-screen px-[2%] overflow-x-hidden  text-white`}>
             {loadingForUser ? <MainLoading/>:
                               <>
                               <Routes>

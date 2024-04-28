@@ -28,15 +28,15 @@ function PasswordReset({}) {
     <>
    <div className='flex flex-col min-h-screen items-center justify-center w-full'>  
     <h1 className='text-[200%] sm:text-[150%] sm:mt-[2%]'>Chat App</h1>
-    <form className='flex flex-col w-full items-start justify-center sm:w-[50%] md:w-[40%] lg:w-[35%] px-[5%] pb-[5%]' onSubmit={handleSubmit} action="">
+    <form className='flex flex-col w-full items-start justify-center sm:w-[50%] md:w-[40%] lg:w-[35%]  pb-[5%]' onSubmit={handleSubmit} action="">
 
          <label className='text-[130%] my-[3%]' htmlFor="">email</label>
          <input type="email" className=' w-full 
-          text-black bg-c3 border-[1px] p-[1%] text-[110%]' name="email" value={email} onChange={(e)=>{setEmail(e.target.value)}}  />
+          text-black bg-c3 border-[1px] py-[1%] text-[110%]' name="email" value={email} onChange={(e)=>{setEmail(e.target.value)}}  />
 
          {err&& <label className='text-red-800'>{err}</label>}
  
-         <button className='mt-[6%] text-[120%] m-auto bg-c1 p-[1%] w-full' type='submit'>resetPassword</button>
+         <button className='mt-[6%] text-[120%] m-auto bg-c1 py-[1%] w-full' type='submit'>resetPassword</button>
  
          <NavLink to='/login' type='button' className='m-auto my-[5%]'>back to login page</NavLink>
      </form>

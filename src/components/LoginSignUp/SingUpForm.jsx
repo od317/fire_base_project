@@ -13,37 +13,40 @@ function SingUpForm({handler}) {
         e.preventDefault()
 
         if(name.length<=0 || email.length<=0 || password.length<=0){
-            setError(true)
+            setError('you must enter email and password and name')
             return
         }
         console.log('submitting')
         setError(false)
-        handler(name,email,password)
+        let res = handler(name,email,password)
+        if(!res){
+          setError('somthing went wrong')
+        }
   }
 
   return (
    <>
    
-   <form className='flex flex-col w-full items-start justify-center sm:w-[50%] md:w-[40%] lg:w-[35%] px-[5%] pb-[5%]' onSubmit={handleSubmit} action="">
+   <form className='flex flex-col w-full items-start justify-center sm:w-[50%] md:w-[40%] lg:w-[35%]  pb-[5%]' onSubmit={handleSubmit} action="">
 
         <label className='text-[130%] my-[3%]' htmlFor="">name</label>
         <input type="text" 
         className=' w-full 
-       text-black bg-c3 border-[1px] p-[1%] text-[110%]' name="name" value={name} onChange={(e)=>{setName(e.target.value)}}  />
+       text-black bg-c3 border-[1px] py-[1%] text-[110%]' name="name" value={name} onChange={(e)=>{setName(e.target.value)}}  />
     
         <label className='text-[130%] my-[3%]' htmlFor="">email</label>
         <input type="email" className=' w-full 
-         text-black bg-c3 border-[1px] p-[1%] text-[110%]' name="email" value={email} onChange={(e)=>{setEmail(e.target.value)}}  />
+         text-black bg-c3 border-[1px] py-[1%] text-[110%]' name="email" value={email} onChange={(e)=>{setEmail(e.target.value)}}  />
     
         <label className='text-[130%] my-[3%]' htmlFor="">password</label>
         <input type="password" className=' w-full 
-         text-black bg-c3 border-[1px] p-[1%] text-[110%]' name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}  />
+         text-black bg-c3 border-[1px] py-[1%] text-[110%]' name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}  />
 
 
-        {err && 'somthing went wrong'}
+        {err}
 
 
-        <button className='mt-[6%] text-[120%] m-auto bg-c1 p-[1%] w-full' type='submit'>signUp</button>
+        <button className='mt-[6%] text-[120%] m-auto bg-c1 py-[1%] w-full' type='submit'>signUp</button>
 
         <button onClick={signInWithGoogle} type='button' className='m-auto mt-[5%]'>
             <svg

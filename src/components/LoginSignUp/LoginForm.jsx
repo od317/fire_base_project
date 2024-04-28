@@ -12,34 +12,37 @@ function LoginForm({handler}) {
           e.preventDefault()
   
           if(email.length<=0 || password.length<=0){
-              setError(true)
+              setError('you must enter email and password')
               return
           }
           console.log('submitting')
           setError(false)
-          handler(email,password)
+          let res = await handler(email,password)
+          if(!res){
+            setError('email or password is worng')
+          }
     }
 
     return (
     <>
-    <form className='flex flex-col w-full items-start justify-center sm:w-[50%] md:w-[40%] lg:w-[35%] px-[5%] pb-[5%]' onSubmit={handleSubmit} action="">
+    <form className='flex flex-col w-[98%] items-start justify-center sm:w-[50%] md:w-[40%] lg:w-[35%]  pb-[5%]' onSubmit={handleSubmit} action="">
  
 
       
          <label className='text-[130%] my-[3%]' htmlFor="">email</label>
-         <input type="email" className=' w-full 
-          text-black bg-c3 border-[1px] p-[1%] text-[110%]' name="email" value={email} onChange={(e)=>{setEmail(e.target.value)}}  />
+         <input type="email" className=' w-[100%] py-[1%]
+          text-black bg-c3 border-[1px]  text-[110%]' name="email" value={email} onChange={(e)=>{setEmail(e.target.value)}}  />
      
          <label className='text-[130%] my-[3%]' htmlFor="">password</label>
-         <input type="password" className=' w-full 
-          text-black bg-c3 border-[1px] p-[1%] text-[110%]' name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}  />
+         <input type="password" className=' w-full py-[1%]
+          text-black bg-c3 border-[1px]  text-[110%]' name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}  />
  
          <NavLink to='resetPass' className='mt-[1%] border-b-[1px] border-b-bg1 hover:border-b-c2 text-c2'>forgot your password ?</NavLink>
 
-         {err && 'somthing went wrong'}
+         {err}
  
  
-         <button className='mt-[6%] text-[120%] m-auto bg-c1 p-[1%] w-full' type='submit'>login</button>
+         <button className='mt-[6%] text-[120%] m-auto bg-c1 py-[1%] w-full' type='submit'>login</button>
  
          <button onClick={signInWithGoogle} type={'button'} className='m-auto mt-[5%]'>
              <svg

@@ -55,7 +55,7 @@ export const handleSingInForm = async (name,email,password)=>{
         return user
       }catch(err){
         console.log('error is ',err.message)
-        return null
+        return false
       }
 }
 
@@ -66,7 +66,7 @@ export const handleLogInForm = async (email,password)=>{
       return user
       }catch(err){
         console.log('error is ',err.message)
-        return err
+        return false
       }
 }
 
