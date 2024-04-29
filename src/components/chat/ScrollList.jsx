@@ -11,8 +11,8 @@ function ScrollList({children,top}) {
   },)
 
   return (
-    <div ref={containerRef} className=' overflow-y-scroll h-[88%] pb-[45%]'>
-            <div className='flex flex-col  items-start  px-[1%] justify-end min-h-full'>
+    <div ref={containerRef} className=' overflow-y-scroll h-[88%] flex-grow pb-[45%]'>
+            <div className='flex flex-col     justify-end min-h-full'>
                 {children}
             </div>
     </div>

@@ -28,11 +28,9 @@ function MessagesLayout({}) {
   },)
 
   return (
-    <div ref={containerRef} className={` ${view ? '':'translate-x-[150%]'} transition-all duration-200 overflow-y-scroll absolute z-[3] bg-bg1 w-full h-full`}>
-      <div className=' relative'>
-        <MessagesList messages={messages}/>
-        <MessageInput></MessageInput>
-      </div>
+    <div ref={containerRef} className={` ${view ? '':'translate-x-[150%]'}  fixed flex flex-col transition-all duration-200 overflow-y-scroll w-[96%] pr-[4%] z-[3] bg-bg1  h-[95vh] `}>
+          <MessagesList messages={messages}/>
+      <MessageInput></MessageInput>
     </div>
   )
 }

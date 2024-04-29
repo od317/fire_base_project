@@ -1,4 +1,6 @@
 import React, { useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { selectViewMessages } from '../../../features/ViewMessages/viewMessagesSlice'
 import { useAutosizeTextArea } from './useAutosizeTextArea'
 
 function MessageInput() {
@@ -6,11 +8,13 @@ function MessageInput() {
   const [message,setMessage] = useState('')
   const ref = useRef()
 
+  const view = useSelector(selectViewMessages)
+
   useAutosizeTextArea(ref.current,message)
 
 
   return (
-    <div className=' fixed z-[5] text-[110%] bg-bg1 bottom-0  w-[96%] py-[2%] transition-all'>
+    <div className=' translate-y-[-100%]  z-[5] text-[110%] bg-bg1 bottom-0  w-[100%] py-[2%] transition-all'>
         <div className='w-full  text-black flex flex-row'>
                 <textarea className='max-h-[5rem] bg-c3 p-[1%] text-[120%] w-[80%]' ref={ref} name="" value={message} onChange={(e)=>{
                   setMessage(e.target.value)
