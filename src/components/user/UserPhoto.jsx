@@ -1,11 +1,14 @@
-import React,{useState} from 'react'
+import React,{useRef, useState} from 'react'
 import { useDispatch } from 'react-redux'
 import { logoutUser } from '../../features/user/userSlice'
+import useOutsideAlerter from '../../hooks/useOutsideAlerter'
 
-const UserPhoto = ({photo,status})=>{
+const UserPhoto = ({photo})=>{
     
     const [imgSrc,setImgSrc] = useState(photo || 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg')
-    
+    const [showOptions,setShowOptions] = useState(false)
+    const optionsRef = useRef(null)
+
     const dispatch = useDispatch()
 
     const handleError = (err)=>{
@@ -15,24 +18,22 @@ const UserPhoto = ({photo,status})=>{
 
     const logout = async ()=>{
           // dispatch(logoutUser())
-          console.log('logoutttt')
     }
+
+    useOutsideAlerter(optionsRef,setShowOptions)
 
     return(
     <>
-      <button onClick={logout} className='relative w-[15%] pb-[15%] rounded-full bg-red-500'>
+      <button ref={optionsRef} onClick={logout} className='relative w-[15%] pb-[15%] rounded-full bg-red-500'>
           <img className='absolute rounded-full w-full h-full' src={imgSrc} onError={handleError} alt="" />
-          {status &&
-          <div className='w-full h-full flex absolute items-end justify-end'>           
-              <svg className=' absolute'
-                fill="#07f246"
-                viewBox="0 0 16 16"
-                height=".8em"
-                width=".8em"
-              >
-                <path d="M16 8 A8 8 0 0 1 8 16 A8 8 0 0 1 0 8 A8 8 0 0 1 16 8 z" />
-              </svg>
-          </div>}
+          <div className={` ${showOptions ? ' scale-1 ':'scale-0'} w-[300%] translate-y-[40%] z-[20] transition-all duration-200  origin-top-left 
+          flex items-center p-[20%] flex-col absolute justify-evenly  bg-c1 translate-x-[0%]`}>       
+                  <button className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>logout</button>
+                  <button className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>settings</button>
+                  <button onClick={()=>{
+                    setShowOptions(false)
+                  }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>close</button>
+          </div>
 
       </button>
     </>)

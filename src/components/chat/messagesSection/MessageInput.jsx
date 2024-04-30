@@ -3,23 +3,30 @@ import { useSelector } from 'react-redux'
 import { selectViewMessages } from '../../../features/ViewMessages/viewMessagesSlice'
 import { useAutosizeTextArea } from './useAutosizeTextArea'
 
-function MessageInput() {
+function MessageInput({handleSendingMessage}) {
  
   const [message,setMessage] = useState('')
   const ref = useRef()
 
   const view = useSelector(selectViewMessages)
 
+  const sendMessage = ()=>{
+        handleSendingMessage({
+          content:message,
+          date:'09:00',
+        })
+  }
+
   useAutosizeTextArea(ref.current,message)
 
 
   return (
-    <div className=' translate-y-[-100%]  z-[5] text-[110%] bg-bg1 bottom-0  w-[100%] py-[2%] transition-all'>
-        <div className='w-full  text-black flex flex-row'>
-                <textarea className='max-h-[5rem] bg-c3 p-[1%] text-[120%] w-[80%]' ref={ref} name="" value={message} onChange={(e)=>{
+    <div className=' translate-y-[-100%] relative h-[9%] z-[5] text-[110%] bg-bg1 bottom-0  w-[100%] py-[2%] transition-all'>
+        <div className='w-full  text-black flex absolute items-center justify-center  h-full flex-row'>
+                <textarea className='max-h-[5rem] min-h-[3rem] bg-c3  text-[120%] w-[80%]' ref={ref} name="" value={message} onChange={(e)=>{
                   setMessage(e.target.value)
                 }} id="" cols="30"></textarea>
-                <button className='w-[20%] flex items-center  justify-center'>
+                <button onClick={sendMessage} className='w-[20%] flex items-center  justify-center'>
                 <svg
                   viewBox="0 0 1024 1024"
                   fill="#DFF5FF"

@@ -10,6 +10,5 @@ export const useAutosizeTextArea = (ref,value) => {
 
                ref.style.height = `${scrollHeight}px`
         }
-
        },[ref,value])
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { changeMessagesView } from '../../../features/ViewMessages/viewMessagesSlice'
-import UserPhoto from '../../user/UserPhoto'
+import UsersPhoto from '../../user/UsersPhoto'
 import ScrollList from '../ScrollList'
 
 function UsersList({users}) {
@@ -16,7 +16,7 @@ function UsersList({users}) {
           (<div key={i} onClick={()=>{
                 dispatch(changeMessagesView(true))              
           }} className='flex flex-row w-full my-[5%] '>
-                  <UserPhoto photo={item.photo} status={true}/>
+                  <UsersPhoto photo={item.photo} status={true}/>
                   <div className='flex flex-col flex-grow px-[2%] items-start justify-start'>
                        <p className='font-bold text-[120%]'>{item.name}{i+1}</p>
                        <p className='text-gray-300'>{item.lastMessage}</p>
