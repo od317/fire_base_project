@@ -1,6 +1,6 @@
 import {Routes,Route,Link, BrowserRouter, useLocation, useNavigate} from 'react-router-dom'
 import { useRef, useState,useEffect } from 'react'
-import app,{auth} from './firebase'
+import app,{addUserToDb, auth, changeOnlineStatus} from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { getRedirectResult } from 'firebase/auth'
 import { showMessages,db,collection } from './firebase'
@@ -14,6 +14,7 @@ import SignUp from './pages/SignUp'
 import PasswordReset from './components/LoginSignUp/PasswordReset'
 import Nav from './components/nav/Nav'
 import LoggedInLayout from './components/LoggedInLayout'
+import { changeWidth, selectScreenWidth } from './features/screenWidth/screenWidth'
 
 export default function App(){
   
@@ -22,6 +23,7 @@ export default function App(){
   const dispatch = useDispatch()
 
   const currentUser = useSelector(selectUser)
+  const screenWidth = useSelector(selectScreenWidth)
 
   const theme = useSelector(selectTheme)
 
@@ -32,29 +34,59 @@ export default function App(){
   useEffect(() => {
     setLoadingForUser(true)
     
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if(user){
+      
+        await addUserToDb(user)
+
         dispatch(login({
-          name:user.displayName ? user.displayName : '',
+          name:user.displayName || user.name,
           email:user.email,
           uid:user.uid,
           photo:user.photoURL
         }))
+      
+        console.log('logged in user is',user)
+
+        await changeOnlineStatus(user,true)
+
+        navigate('/')
+
       }
+      
       else{
          navigate('/login')
          dispatch(logout())
-      }
+        }
       setLoadingForUser(false)
+
     })
 
-    return () => unsubscribe()
-   },[])
+    const pageLeave = async ()=>{
+          await changeOnlineStatus(auth.currentUser,false)
+    }
 
-  
-   useEffect(()=>{
-     console.log(('currrrent',currentUser))
-   },[currentUser])
+    window.addEventListener('beforeunload',pageLeave)
+    
+    return () => {
+      window.removeEventListener('beforeunload',pageLeave)
+      unsubscribe()
+    }
+ 
+  },[])
+
+  useEffect(()=>{
+    
+    const changeSW = ()=>{
+          dispatch(changeWidth())
+    }
+    window.addEventListener('resize',changeSW)
+
+    return()=>{
+      window.removeEventListener('resize',changeSW)
+    }
+
+  },[screenWidth])
 
 
     return(<>
@@ -71,7 +103,7 @@ export default function App(){
                               <LoginSign></LoginSign>}
           </div> */}
 
-          <div className={` bg-bg1 min-h-screen  max-h-screen overflow-y-hidden max-w-screen px-[2%] overflow-x-hidden  text-white`}>
+          <div className={` bg-bg1 min-h-screen  max-h-screen overflow-y-hidden max-w-screen  overflow-x-hidden  text-white`}>
             {loadingForUser ? <MainLoading/>:
                               <>
                               <Routes>

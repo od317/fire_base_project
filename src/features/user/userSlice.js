@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { auth,signOut } from "../../firebase"
+import { auth,changeOnlineStatus,signOut } from "../../firebase"
 
 const initialState = {
        value:{
@@ -9,6 +9,7 @@ const initialState = {
 
 export const logoutUser = createAsyncThunk('user/logoutUser',async ()=>{
            try{
+           await changeOnlineStatus(auth.currentUser,false)
            await signOut(auth)
            return true
            }catch(err){

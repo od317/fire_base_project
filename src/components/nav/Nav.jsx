@@ -1,5 +1,8 @@
 import React,{useEffect, useState} from 'react'
 import { useSelector } from 'react-redux'
+import { selectChatUser } from '../../features/chatUser/chatUser'
+import { selectModal } from '../../features/modal/modalSlice'
+import { selectScreenWidth } from '../../features/screenWidth/screenWidth'
 import { selectUser } from '../../features/user/userSlice'
 import UserPhoto from '../user/UserPhoto'
 import UserInfo from './UserInfo'
@@ -7,16 +10,21 @@ function Nav({children}) {
     
     const user = useSelector(selectUser)
 
+    const chatUser = useSelector(selectChatUser)
+
+    const screenW = useSelector(selectScreenWidth)
+
+    const modal = useSelector(selectModal)
 
     useEffect(()=>{
-         console.log('iserss',user)
     },[])
 
     return (
     <>
-    <nav className=' z-[10] border-b-white whitespace-nowrap  mb-[1%]'>
+    <nav className=' z-[10] border-b-white whitespace-nowrap  mb-[0%]
+     '>
          <UserInfo user={user}></UserInfo>
-         <UserInfo user={user} chat={true}></UserInfo>
+         { screenW < 786 && <UserInfo user={chatUser} chat={true}></UserInfo>}
 {/* 
          <div 
          style={{transform:`${ viewMessages ?  'translateX(-100%)' : ''}`}}

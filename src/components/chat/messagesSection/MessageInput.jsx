@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { selectChatUser } from '../../../features/chatUser/chatUser'
+import { selectUser } from '../../../features/user/userSlice'
 import { selectViewMessages } from '../../../features/ViewMessages/viewMessagesSlice'
 import { useAutosizeTextArea } from './useAutosizeTextArea'
 
@@ -8,12 +10,14 @@ function MessageInput({handleSendingMessage}) {
   const [message,setMessage] = useState('')
   const ref = useRef()
 
+  const user = useSelector(selectUser)
+  const chatUser = useSelector(selectChatUser)
+
   const view = useSelector(selectViewMessages)
 
   const sendMessage = ()=>{
         handleSendingMessage({
           content:message,
-          date:'09:00',
         })
   }
 
@@ -21,17 +25,22 @@ function MessageInput({handleSendingMessage}) {
 
 
   return (
-    <div className=' translate-y-[-100%] relative h-[9%] z-[5] text-[110%] bg-bg1 bottom-0  w-[100%] py-[2%] transition-all'>
-        <div className='w-full  text-black flex absolute items-center justify-center  h-full flex-row'>
-                <textarea className='max-h-[5rem] min-h-[3rem] bg-c3  text-[120%] w-[80%]' ref={ref} name="" value={message} onChange={(e)=>{
+    <div className=' 
+     translate-y-[-15%] px-[1%] relative h-[12%] z-[5] text-[110%] bg-bg1 pl-[2%] bottom-0 flex items-center w-[100%]  transition-all
+     md:translate-y-[-10%]
+    '>
+        <div className='w-full  text-black flex  items-center justify-center  flex-row'>
+                <textarea className='
+                max-h-[2rem] bg-c3 p-[.5%] resize-none text-[120%] w-[80%]
+                ' ref={ref} name="" value={message} onChange={(e)=>{
                   setMessage(e.target.value)
                 }} id="" cols="30"></textarea>
                 <button onClick={sendMessage} className='w-[20%] flex items-center  justify-center'>
                 <svg
                   viewBox="0 0 1024 1024"
                   fill="#DFF5FF"
-                  height="2em"
-                  width="2em"
+                  height="1.5em"
+                  width="1.5em"
                 >
                       <defs>
                         <style />

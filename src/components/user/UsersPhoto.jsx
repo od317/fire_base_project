@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 function UsersPhoto({photo,status}) {
     
-    const [imgSrc,setImgSrc] = useState(photo)
+    const [imgSrc,setImgSrc] = useState(photo && photo.length ? photo : 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg' )
 
     const handleError = (err)=>{
         setImgSrc('https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg')

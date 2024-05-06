@@ -5,7 +5,7 @@ import { store } from './store'
 import { useDispatch } from 'react-redux'
 import {fetchUsers} from './features/users/usersSlice'
 
-store.dispatch(fetchUsers())
+// store.dispatch(fetchUsers())
 
 function Layout() {
 

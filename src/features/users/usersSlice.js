@@ -1,13 +1,30 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { getAllUsers } from "../../firebase"
 
-const initialState = []
+
+// let users = [
+
+// ]
+
+// for(let i=0;i<220;i++){
+//     users.push(    {
+//       name:"name",
+//       lastMessage:'hello',
+//       date:'09:00',
+//       online:true,
+//       photo:'https://lh3.googleusercontent.com/a/ACg8ocISoJBA5MezFgycat-m33VjK6UWGrR_Q61QOU0wfLu2WQ=s96-c'
+//   })
+// }
+
+const initialState = {
+    value:[]
+}
 
 const POSTS_URL = 'https://jsonplaceholder.typicode.com/users'
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async ()=>{
-       const res = await fetch(POSTS_URL)
-       const data = await res.json()
-       return data
+       const res = await getAllUsers()
+       return res
 })
 
 export const usersSlice = createSlice({
@@ -16,11 +33,12 @@ export const usersSlice = createSlice({
     reducers:{},
     extraReducers(builder){
         builder.addCase(fetchUsers.fulfilled,(state,action)=>{
-               return action.payload
+               console.log('all users fetched',action.payload)
+               state.value = action.payload
         })
     }
 })
 
-export const selectAllUsers = (state) => state.users
+export const selectAllUsers = (state) => state.users.value
 
 export default usersSlice.reducer
