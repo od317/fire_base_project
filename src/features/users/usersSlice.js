@@ -20,7 +20,6 @@ const initialState = {
     value:[]
 }
 
-const POSTS_URL = 'https://jsonplaceholder.typicode.com/users'
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async ()=>{
        const res = await getAllUsers()

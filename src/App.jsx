@@ -76,6 +76,10 @@ export default function App(){
   },[])
 
   useEffect(()=>{
+    console.log('changes in the user')
+  },[auth.currentUser])
+
+  useEffect(()=>{
     
     const changeSW = ()=>{
           dispatch(changeWidth())

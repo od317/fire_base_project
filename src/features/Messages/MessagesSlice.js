@@ -13,7 +13,6 @@ export const removeMessage = createAsyncThunk('messages/removeMessage', async (i
 })
 
 export const getMessages = createAsyncThunk('messages/getMessages',async(id)=>{
-             console.log('getting messages')
              const res = await showMessages(id)
              return res
 })
@@ -57,6 +56,10 @@ export const messagesSlice = createSlice({
         // },
         changeMessages:(state,action)=>{
             state.value = action.payload
+            state.pending = false
+        },
+        changeMessagesStatus:(state,action)=>{
+            state.pending = action.payload
         }
     },
     extraReducers: (build) => {
@@ -79,7 +82,8 @@ export const messagesSlice = createSlice({
 
 
 export const selectMessages = (state) => state.messages.value
+export const selectMessagesStatus = (state) => state.messages.pending
 
-export const { addMessage, changeMessages } = messagesSlice.actions
+export const { addMessage, changeMessages ,changeMessagesStatus } = messagesSlice.actions
 
 export default messagesSlice.reducer

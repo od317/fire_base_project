@@ -4,7 +4,7 @@ import { fetchUsers, selectAllUsers } from '../../../features/users/usersSlice'
 import UsersList from './UsersList'
 import { store } from '../../../store'
 import { db,collection} from '../../../firebase'
-import { onSnapshot } from 'firebase/firestore'
+import { onSnapshot, query, where } from 'firebase/firestore'
 
 store.dispatch(fetchUsers())
 
@@ -26,9 +26,12 @@ store.dispatch(fetchUsers())
 function UsersLayout() {
 
   const dispatch = useDispatch()
-  useEffect(() => {
+  const users = useSelector(selectAllUsers)
 
-    const unsubscribe = onSnapshot(collection(db, 'users'), async (snapshot) => {
+  console.log('osdamd',users)
+  useEffect(() => {
+    const q = query(collection(db, 'users'))
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
       
       console.log('users changed')
       dispatch(fetchUsers())

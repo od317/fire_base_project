@@ -2,10 +2,12 @@ import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithRedirect, updateProfile, signInWithPopup, signOut } from "firebase/auth"
 import { getAnalytics } from "firebase/analytics"
 import { getAuth } from "firebase/auth"
-import { getFirestore, addDoc, collection, getDocs, getDoc, updateDoc, doc, onSnapshot, deleteDoc, query, orderBy, serverTimestamp, setDoc, and, limit, startAt,endAt } from 'firebase/firestore'
+import { getFirestore, addDoc, collection, getDocs, getDoc, updateDoc, doc, onSnapshot, deleteDoc, query, orderBy, serverTimestamp, setDoc, and, limit, startAt, endAt } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 import { v4 as uuid } from 'uuid'
 import { where, or } from "firebase/firestore"
+import { arrayUnion } from "firebase/firestore"
+
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -44,7 +46,6 @@ const signInWithGoogle = async () => {
     //   email: user.email
     // })
     await addUserToDb(res.user)
-    console.log('signed in successfully')
   } catch (err) {
     console.log(err)
   }
@@ -52,7 +53,6 @@ const signInWithGoogle = async () => {
 
 export const addUserToDb = async (user) => {
   try {
-    console.log('user is ', user)
     const userRef = doc(db, 'users', user.uid)
     const userDoc = await getDoc(userRef)
     if (userDoc.exists()) {
@@ -71,7 +71,6 @@ export const addUserToDb = async (user) => {
 export const changeOnlineStatus = async (user, status) => {
   try {
     const userRef = doc(db, 'users', user.uid)
-    console.log('online status ', user.uid, " and ", auth.currentUser.uid)
     await setDoc(userRef, {
       online: status,
     }, { merge: true })
@@ -106,18 +105,33 @@ export const handleLogInForm = async (email, password) => {
 }
 
 export const getAllUsers = async () => {
+  let filterdData = []
   try {
-    const q = query(usersRef)
-    const data = await getDocs(q)
-    const filterdData = data.docs.map((doc) => {
-      return {
-        ...doc.data(),
-        id: doc.id
-      }
-    })
-    return filterdData
+    const connections = await getConnections()
+    const friends = await getFriends(connections)
+
+
+    if (connections.length > 0) {
+      const q = query(usersRef,
+        where('__name__', 'in', connections)
+      )
+      const data = await getDocs(q)
+      filterdData = data.docs.map((doc) => {
+        return {
+          ...doc.data(),
+          id: doc.id
+        }
+      })
+      filterdData = filterdData.filter((doc) => {
+        return doc.id !== auth.currentUser.uid
+      })
+
+    }
+    filterdData = [...filterdData, ...friends]
   } catch (err) {
-    console.log(err)
+    console.log('nope' + err)
+  } finally {
+    return filterdData
   }
 }
 
@@ -128,18 +142,30 @@ export const sendMessageF = async (message) => {
   message.createdAt = serverTimestamp()
   const res = await addDoc(messageRef, message)
   message.createdAt = new Date().toUTCString()
-  return message
+
+  const s_id = message.senderId
+  const r_id = message.receiverId
+
+  try {
+
+    addFriend(s_id, r_id)
+    addConnection(s_id, r_id)
+
+  } catch (err) {
+  } finally {
+    return message
+  }
 }
 
 export const sendMessage = async (message) => {
   try {
+
     message.createdAt = serverTimestamp()
-    const nnMessageRef = collection(db, 'messages')
+
     const newMesasgeRef = await addDoc(messageRef, message)
 
     const newMessage = await getDoc(newMesasgeRef)
 
-    console.log('new messagesssssss', newMessage._document.data.value.mapValue)
 
     return {
       id: newMessage.id,
@@ -178,7 +204,6 @@ export const showMessages = async (id) => {
         createdAt: doc.data().createdAt?.toDate()?.toLocaleString()
       }
     })
-    console.log('filtereddd', filterdData)
     return filterdData
   } catch (err) {
     console.log(err)
@@ -210,7 +235,6 @@ export const deleteMessages = async (messageID) => {
 }
 
 export const editMessage = async (messageId, newMessage) => {
-  console.log('new message is', newMessage)
   const message = doc(db, 'messages', messageId)
   await updateDoc(message, newMessage)
   return true
@@ -244,8 +268,105 @@ export const searchForUsers = async (search) => {
   return filterdData
 }
 
-export const addFriend = async (id)=>{
+export const addFriend = async (s_id, d_id) => {
 
+  try {
+
+    const userRef = doc(db, 'users', s_id)
+    const userData = await getDoc(userRef)
+    const data = userData.data()
+    if (data.friends && data.friends.includes(d_id)) {
+      return
+    }
+
+    await updateDoc(userRef, {
+      friends: arrayUnion(d_id)
+    })
+  } catch (err) {
+    console.log('error adding friend', err)
+  }
+}
+
+export const addConnection = async (s_id, d_id) => {
+
+  try {
+
+    const connectionsRef = collection(db, 'connections')
+    const q = query(
+      connectionsRef,
+      or(
+        where('value', '==', "" + d_id + s_id),
+        where('value', '==', "" + s_id + d_id),
+      )
+    )
+    const conData = await getDocs(q)
+    if (conData.docs.length > 0) {
+      return
+    }
+    await addDoc(connectionsRef, {
+      value: "" + s_id + d_id,
+      u1: s_id,
+      u2: d_id
+    })
+  } catch (err) {
+    console.log('error adding con', err)
+  }
+}
+
+export const getFriends = async (connections) => {
+  try {
+    const userRef = doc(db, 'users', auth.currentUser.uid)
+    let userData = await getDoc(userRef)
+    userData = userData.data().friends
+    let filterdData
+    const q = query(usersRef,
+      where('__name__', 'in', userData)
+    )
+    let res = await getDocs(q)
+    filterdData = res.docs.map((doc) => {
+      return {
+        ...doc.data(),
+        id: doc.id
+      }
+    })
+    filterdData = filterdData.filter((doc)=>{
+       return !connections.includes(doc.id)
+    })
+    return filterdData
+  } catch (err) {
+    console.log('cant get user freinds', err)
+    return []
+  }
+}
+// make getConnetcions and use it insied get all users to find all friends of the logged in user then displa them you must user where('id','in',connectionsArray)
+export const getConnections = async () => {
+  try {
+    const id = auth.currentUser.uid
+    const connectionsRef = collection(db, 'connections')
+    const q = query(connectionsRef,
+      or(
+        where('u1', '==', id),
+        where('u2', '==', id)
+      ))
+    const res = await getDocs(q)
+    let data = res.docs.map((doc) => {
+      return {
+        ...doc.data(),
+        id: doc.id
+      }
+    })
+
+    data = data.map((doc) => {
+      if (doc.u1 == id)
+        return doc.u2
+      return doc.u1
+    })
+
+    return data
+  } catch (err) {
+    console.log('errsssssssss', err)
+    return []
+  }
 }
 
 // export const unsubscribeMessageList = getDocs(messageRef).onSnapshot(snapshot => {
