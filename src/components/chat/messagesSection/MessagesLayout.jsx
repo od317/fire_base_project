@@ -95,9 +95,8 @@ function MessagesLayout({ }) {
      md:translate-x-[0%] md:w-[75%] md:relative md:pr-[0%] md:h-auto
     `}>
       {
-      messages.length > 0 && !messagesStatus ?
+       !messagesStatus ?
       <>
-      {messagesStatus && <>osama</>}
       <MessagesList />
       <MessageInput handleSendingMessage={SendingMessage} ></MessageInput>
       </>

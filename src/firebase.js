@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithRedirect, updateProfile, signInWithPopup, signOut } from "firebase/auth"
+import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithRedirect, updateProfile, signInWithPopup, signOut, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth"
 import { getAnalytics } from "firebase/analytics"
 import { getAuth } from "firebase/auth"
 import { getFirestore, addDoc, collection, getDocs, getDoc, updateDoc, doc, onSnapshot, deleteDoc, query, orderBy, serverTimestamp, setDoc, and, limit, startAt, endAt } from 'firebase/firestore'
@@ -54,6 +54,7 @@ const signInWithGoogle = async () => {
 export const addUserToDb = async (user) => {
   try {
     const userRef = doc(db, 'users', user.uid)
+    console.log('adding user', user)
     const userDoc = await getDoc(userRef)
     if (userDoc.exists()) {
       return
@@ -64,7 +65,7 @@ export const addUserToDb = async (user) => {
       photoUrl: user.photoURL || ''
     })
   } catch (err) {
-    console.log(err)
+    console.log('err adding user ', err)
   }
 }
 
@@ -329,8 +330,8 @@ export const getFriends = async (connections) => {
         id: doc.id
       }
     })
-    filterdData = filterdData.filter((doc)=>{
-       return !connections.includes(doc.id)
+    filterdData = filterdData.filter((doc) => {
+      return !connections.includes(doc.id)
     })
     return filterdData
   } catch (err) {
@@ -338,7 +339,7 @@ export const getFriends = async (connections) => {
     return []
   }
 }
-// make getConnetcions and use it insied get all users to find all friends of the logged in user then displa them you must user where('id','in',connectionsArray)
+
 export const getConnections = async () => {
   try {
     const id = auth.currentUser.uid
@@ -368,6 +369,54 @@ export const getConnections = async () => {
     return []
   }
 }
+
+export const changeName = async (newName) => {
+  try {
+    const userRef = doc(db, 'users', auth.currentUser.uid)
+    await updateDoc(userRef, {
+      name: newName
+    })
+
+    await updateProfile(auth.currentUser, {
+      displayName: newName
+    })
+    console.log('name changed')
+    return true
+  } catch (err) {
+    console.log('error changing the name', err)
+    return false
+  }
+}
+
+
+export const chagnePassWord = async (currentPassword, newPassword) => {
+  try {
+    const credentials = EmailAuthProvider.credential(auth.currentUser.email, currentPassword)
+    await reauthenticateWithCredential(auth.currentUser,credentials)
+    await updatePassword(auth.currentUser,newPassword)
+  
+    console.log('pass changed succ')
+    return true
+  } catch (err) {
+    console.log('error changing pass', err)
+    return false
+  }
+}
+
+
+export const isSignedInWithGoogle = () => {
+  const currentUser = auth.currentUser;
+  if (currentUser) {
+    if (currentUser.providerData) {
+      for (const userInfo of currentUser.providerData) {
+        if (userInfo.providerId === 'google.com') {
+          return true
+        }
+      }
+    }
+  }
+  return false;
+};
 
 // export const unsubscribeMessageList = getDocs(messageRef).onSnapshot(snapshot => {
 //         showMessages().then(res=>{

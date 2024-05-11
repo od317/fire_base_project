@@ -28,6 +28,15 @@ export const userSlice = createSlice({
               logout:(state)=>{
                      console.log('logging out')
                      state.value.user = null
+              },
+              changeUName:(state,action)=>{
+                     console.log('changing name in redux')
+                     if(state.value.user.name){
+                            state.value.user.name = action.payload
+                     }
+                     else{
+                            state.value.user.displayName = action.payload
+                     }
               }
        },
        extraReducers(builder){
@@ -43,6 +52,6 @@ export const userSlice = createSlice({
 
 export const selectUser = (state)=> state.user.value.user
 
-export const {login,logout} = userSlice.actions
+export const {login,logout,changeUName} = userSlice.actions
 
 export default userSlice.reducer

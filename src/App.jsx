@@ -1,6 +1,6 @@
 import {Routes,Route,Link, BrowserRouter, useLocation, useNavigate} from 'react-router-dom'
 import { useRef, useState,useEffect } from 'react'
-import app,{addUserToDb, auth, changeOnlineStatus} from './firebase'
+import app,{addUserToDb, auth, changeOnlineStatus, isSignedInWithGoogle} from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { getRedirectResult } from 'firebase/auth'
 import { showMessages,db,collection } from './firebase'
@@ -15,6 +15,7 @@ import PasswordReset from './components/LoginSignUp/PasswordReset'
 import Nav from './components/nav/Nav'
 import LoggedInLayout from './components/LoggedInLayout'
 import { changeWidth, selectScreenWidth } from './features/screenWidth/screenWidth'
+import Settings from './pages/Settings'
 
 export default function App(){
   
@@ -43,14 +44,15 @@ export default function App(){
           name:user.displayName || user.name,
           email:user.email,
           uid:user.uid,
-          photo:user.photoURL
+          photo:user.photoURL,
+          google:isSignedInWithGoogle()
         }))
       
         console.log('logged in user is',user)
 
         await changeOnlineStatus(user,true)
 
-        navigate('/')
+        // navigate('/')
 
       }
       
@@ -75,9 +77,6 @@ export default function App(){
  
   },[])
 
-  useEffect(()=>{
-    console.log('changes in the user')
-  },[auth.currentUser])
 
   useEffect(()=>{
     
@@ -116,6 +115,10 @@ export default function App(){
                                   <Chat></Chat>
                                 </LoggedInLayout>
                                 }></Route>
+                                <Route path='/settings' element={
+                                  <Settings></Settings>
+                                }>
+                                </Route>
                                 <Route path='/login'>
                                   <Route path='' element={<Login/>}></Route>
                                   <Route path='resetPass' element={<PasswordReset/>}></Route>

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchUsers, selectAllUsers } from '../../../features/users/usersSlice'
 import UsersList from './UsersList'
 import { store } from '../../../store'
-import { db,collection} from '../../../firebase'
-import { onSnapshot, query, where } from 'firebase/firestore'
+import { db,collection, auth} from '../../../firebase'
+import { onSnapshot, or, query, where } from 'firebase/firestore'
 
 store.dispatch(fetchUsers())
 
@@ -30,7 +30,26 @@ function UsersLayout() {
 
   console.log('osdamd',users)
   useEffect(() => {
-    const q = query(collection(db, 'users'))
+    const id = auth.currentUser.uid
+    const connectionsRef = collection(db, 'connections')
+    const q = query(connectionsRef,
+      or(
+        where('u1', '==', id),
+        where('u2', '==', id)
+      ))
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      
+      console.log('users changed')
+      dispatch(fetchUsers())
+
+    })
+
+    return () => unsubscribe()
+
+  }, [dispatch])
+
+  useEffect(() => {
+    const q = query(collection(db, 'users'),auth.currentUser.uid)
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       
       console.log('users changed')

@@ -2,13 +2,15 @@ import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { logoutUser } from '../../features/user/userSlice'
 import useOutsideAlerter from '../../hooks/useOutsideAlerter'
+import { useNavigate } from 'react-router-dom'
 
 const UserPhoto = ({ photo }) => {
 
   const [imgSrc, setImgSrc] = useState(photo || 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg')
   const [showOptions, setShowOptions] = useState(false)
   const optionsRef = useRef(null)
-
+  
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const handleError = (err) => {
@@ -32,7 +34,9 @@ const UserPhoto = ({ photo }) => {
           <button onClick={() => {
             logout()
           }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>logout</button>
-          <button className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>settings</button>
+          <button onClick={()=>{
+             navigate('/settings')
+          }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>settings</button>
           <button onClick={() => {
             setShowOptions(false)
           }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>close</button>

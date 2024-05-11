@@ -71,7 +71,7 @@ export const messagesSlice = createSlice({
                 console.log('failed to send messaged')
             })
             .addCase(getMessages.fulfilled,(state,action)=>{
-                console.log('get messages succ',action.payload)
+                // console.log('get messages succ',action.payload)
                 state.value = action.payload
             }) 
             .addCase(removeMessage.fulfilled,(state,action)=>{
