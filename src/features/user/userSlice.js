@@ -41,6 +41,7 @@ export const userSlice = createSlice({
               updatePhoto:(state,action)=>{
                      console.log('changing photo in redux')
                      state.value.user.photo = action.payload
+                     console.log('new user is ',state.value)
               }
        },
        extraReducers(builder){
@@ -56,6 +57,6 @@ export const userSlice = createSlice({
 
 export const selectUser = (state)=> state.user.value.user
 
-export const {login,logout,changeUName} = userSlice.actions
+export const {login,logout,changeUName,updatePhoto} = userSlice.actions
 
 export default userSlice.reducer

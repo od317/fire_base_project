@@ -26,7 +26,7 @@ const UserPhoto = ({ photo }) => {
 
   return (
     <>
-      <div ref={optionsRef}  className='relative w-[15%] pb-[15%] rounded-full bg-red-500
+      <div ref={optionsRef}  className='relative w-[15%] pb-[15%] rounded-full bg-gray-800 bg-opacity-30
                                         md:w-[3%] md:pb-[3%]'>
         <img className='absolute rounded-full w-full h-full' src={imgSrc} onError={handleError} alt="" />
         <div className={` ${showOptions ? ' scale-1 ' : 'scale-0'} w-[300%] translate-y-[40%] z-[20] transition-all duration-200  origin-top-left 
