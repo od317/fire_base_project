@@ -37,6 +37,10 @@ export const userSlice = createSlice({
                      else{
                             state.value.user.displayName = action.payload
                      }
+              },
+              updatePhoto:(state,action)=>{
+                     console.log('changing photo in redux')
+                     state.value.user.photo = action.payload
               }
        },
        extraReducers(builder){

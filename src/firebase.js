@@ -3,7 +3,7 @@ import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndP
 import { getAnalytics } from "firebase/analytics"
 import { getAuth } from "firebase/auth"
 import { getFirestore, addDoc, collection, getDocs, getDoc, updateDoc, doc, onSnapshot, deleteDoc, query, orderBy, serverTimestamp, setDoc, and, limit, startAt, endAt } from 'firebase/firestore'
-import { getStorage } from 'firebase/storage'
+import { getStorage, list, listAll, ref, uploadBytes } from 'firebase/storage'
 import { v4 as uuid } from 'uuid'
 import { where, or } from "firebase/firestore"
 import { arrayUnion } from "firebase/firestore"
@@ -392,9 +392,9 @@ export const changeName = async (newName) => {
 export const chagnePassWord = async (currentPassword, newPassword) => {
   try {
     const credentials = EmailAuthProvider.credential(auth.currentUser.email, currentPassword)
-    await reauthenticateWithCredential(auth.currentUser,credentials)
-    await updatePassword(auth.currentUser,newPassword)
-  
+    await reauthenticateWithCredential(auth.currentUser, credentials)
+    await updatePassword(auth.currentUser, newPassword)
+
     console.log('pass changed succ')
     return true
   } catch (err) {
@@ -416,7 +416,26 @@ export const isSignedInWithGoogle = () => {
     }
   }
   return false;
-};
+}
+
+
+export const savePhoto = async (photo) => {
+  try {
+    const photoRef = ref(storage, `images/${auth.currentUser.uid}`)
+    await uploadBytes(photoRef, photo)
+    console.log('image uploaded successfully')
+    const savedPhoto = await getPhoto(`images/${auth.currentUser.uid}`)
+  } catch (err) {
+    console.log('err uploading photo', err)
+  }
+}
+
+export const getPhoto = async (path) => {
+  const photoRef = ref(storage,'images')
+  const photo = await listAll(photoRef)
+  console.log('savedphoto is ',photo)
+  return photo
+}
 
 // export const unsubscribeMessageList = getDocs(messageRef).onSnapshot(snapshot => {
 //         showMessages().then(res=>{

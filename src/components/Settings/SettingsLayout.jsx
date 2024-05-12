@@ -5,6 +5,7 @@ import { changeUName, selectUser } from '../../features/user/userSlice'
 import { chagnePassWord, changeName, isSignedInWithGoogle } from '../../firebase'
 import UserPhoto from '../user/UserPhoto'
 import Form from './Form'
+import PhotoChange from './PhotoChange'
 
 function SettingsLayout() {
 
@@ -67,14 +68,15 @@ function SettingsLayout() {
             <div className='flex flex-col pt-[5%] items-center justify-center'>
                 <UserPhoto photo={user?.photo} />
                 <label className='mt-[1%]' htmlFor="">{user?.name || user?.displayName}</label>
-                <button className='mt-[1%] bg-c1 p-[1%] '>change photo</button>
             </div>
+
+            <PhotoChange></PhotoChange>
 
             <div className='px-[2%]'>
 
                 <Form key={'name'} loading={nameLoading} name={'name'} type={'text'} handleSubmit={changeNameSubmit}></Form>
                 
-                { !user.google && <Form name={'password'} loading={passwordLoading} type={'password'} handleSubmit={changePasswordSubmit}></Form>}
+                { !user?.google && <Form name={'password'} loading={passwordLoading} type={'password'} handleSubmit={changePasswordSubmit}></Form>}
                 {message}
             </div>
 
