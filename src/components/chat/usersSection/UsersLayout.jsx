@@ -5,6 +5,7 @@ import UsersList from './UsersList'
 import { store } from '../../../store'
 import { db,collection, auth} from '../../../firebase'
 import { onSnapshot, or, query, where } from 'firebase/firestore'
+import UsersLoading from '../../Loading/UsersLoading'
 
 store.dispatch(fetchUsers())
 
@@ -62,7 +63,13 @@ function UsersLayout() {
   }, [dispatch])
 
   return (
-      <UsersList></UsersList>
+    <>
+      { 
+      users.length>0 ?
+      <UsersList></UsersList>:
+      <UsersLoading/>
+      }
+    </>
   )
 }
 
