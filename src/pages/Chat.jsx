@@ -8,25 +8,19 @@ import MessagesLayout from '../components/chat/messagesSection/MessagesLayout'
 import { selectViewMessages } from '../features/ViewMessages/viewMessagesSlice'
 import Modal from '../components/modal/Modal'
 import { selectModal } from '../features/modal/modalSlice'
+import {selectScreenWidth} from '../features/screenWidth/screenWidth'
+
 function Chat() {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    
+    const screenWidth = useSelector(selectScreenWidth)
     const user = useSelector(selectUser)
 
     const viewMessages = useSelector(selectViewMessages)
 
 
-    const logout = async()=>{
-        try{
-        await auth.signOut()
-        }
-        catch(err){
-            console.log(err)
-        }
-    }
 
     useEffect(()=>{
        if(!user)
@@ -39,13 +33,23 @@ function Chat() {
     <>
     { user && 
     <>
+    
     <div className={` 
     max-h-screen  overflow-x-hidden  z-[2] relative flex-grow
     md:flex md:flex-row-reverse overflow-y-hidden w-full
     `}>
+      { screenWidth>= 768 ?
+        <>
         <MessagesLayout />
         <UsersLayout />
-    </div>
+        </>
+        :
+        viewMessages?
+        <MessagesLayout />
+        :
+        <UsersLayout />
+      }
+      </div>
     
     </>
     }
