@@ -26,8 +26,8 @@ function MessageInput({handleSendingMessage}) {
 
   return (
     <div className=' 
-     translate-y-[-15%] px-[1%] relative h-[12%] z-[5] text-[110%] bg-bg1 pl-[2%] bottom-0 flex items-center w-[100%]  transition-all
-     md:translate-y-[-10%]
+      px-[1%]  h-[12%] z-[5] text-[110%] bg-bg1 pl-[2%] bottom-0 flex items-center w-[100%]  transition-all
+     md:translate-y-[-10%] fixed
     '>
         <div className='w-full  text-black flex  items-center justify-center  flex-row'>
                 <textarea className='
