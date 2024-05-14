@@ -24,7 +24,7 @@ function Nav({children}) {
     <nav className=' z-[10] border-b-white whitespace-nowrap  mb-[0%]
      '>
          <UserInfo user={user}></UserInfo>
-         { screenW < 786 && <UserInfo user={chatUser} chat={true}></UserInfo>}
+         {/* { screenW < 786 && <UserInfo user={chatUser} chat={true}></UserInfo>} */}
 {/* 
          <div 
          style={{transform:`${ viewMessages ?  'translateX(-100%)' : ''}`}}

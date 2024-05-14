@@ -14,7 +14,7 @@ function UserInfo({ user, chat }) {
 
    return (
       <div
-         style={{ transform: `${viewMessages && screenW <768? 'translateX(-100%)' : ''}` }}
+         // style={{ transform: `${viewMessages && screenW <768? 'translateX(-100%)' : ''}` }}
          className='w-[100%] border-b-[1px] relative transition-all  duration-200 max-w-screen inline-block '>
          <div className='pb-[2%] flex flex-row  justify-between
          md:justify-start md:items-center md:space-x-5 md:pb-[.2%]'>
