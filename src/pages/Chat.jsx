@@ -45,7 +45,7 @@ function Chat() {
         <UsersLayout />
         </>
         :
-        viewMessages && id.length>0?
+        viewMessages && id && id.length>0?
         <MessagesLayout />
         :
         <UsersLayout />
