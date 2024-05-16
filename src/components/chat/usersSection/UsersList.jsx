@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 import { changeChatUser, changeUser, selectChatUser } from '../../../features/chatUser/chatUser'
 import { selectUser } from '../../../features/user/userSlice'
 import { selectAllUsers } from '../../../features/users/usersSlice'
@@ -18,6 +19,25 @@ function UsersList() {
 
   const chatUser = useSelector(selectChatUser)
 
+  const [searchParams, setSearchParams] = useSearchParams()
+
+
+  const changeUserSeacrhUrl = (id) => {
+    setSearchParams({ chatUser: id })
+  }
+
+  const changeChatUserP = () => {
+
+    const id = searchParams.get('chatUser')
+
+    let user = users.filter((user) => {
+      return user.id === id
+    })
+    
+    if(user.length>0)
+       dispatch(changeChatUser(user[0]))
+    
+  }
 
   useEffect(() => {
     if (users.length > 0 && !chatUser) {
@@ -25,9 +45,13 @@ function UsersList() {
     }
   }, [users])
 
+  useEffect(() => {
+     changeChatUserP()
+  }, [searchParams])
+
   return (
     <>
-      { !users || users.length > 0 ?
+      {!users || users.length > 0 ?
         <ScrollList>
           {users.map((item, i) => {
             if (item.id !== user?.uid)
@@ -36,6 +60,7 @@ function UsersList() {
                   <div onClick={() => {
                     dispatch(changeMessagesView(true))
                     dispatch(changeUser(item))
+                    changeUserSeacrhUrl(item.id)
                   }}
                     className={`flex flex-row p-[2%] my-[3%] 
         ${chatUser?.id === item?.id ? 'bg-opacity-[50%]' : 'hover:bg-opacity-[20%]'}  

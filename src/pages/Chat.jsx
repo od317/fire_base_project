@@ -2,7 +2,7 @@ import React, { useEffect,useState} from 'react'
 import { auth} from '../firebase'
 import { logout, selectUser } from '../features/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import UsersLayout from '../components/chat/usersSection/UsersLayout'
 import MessagesLayout from '../components/chat/messagesSection/MessagesLayout'
 import { selectViewMessages } from '../features/ViewMessages/viewMessagesSlice'
@@ -14,7 +14,8 @@ function Chat() {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
+    const [searchParams,setSearchParams] = useSearchParams()
+    const id = searchParams.get('chatUser')
     const screenWidth = useSelector(selectScreenWidth)
     const user = useSelector(selectUser)
 
@@ -44,7 +45,7 @@ function Chat() {
         <UsersLayout />
         </>
         :
-        viewMessages?
+        viewMessages && id.length>0?
         <MessagesLayout />
         :
         <UsersLayout />
