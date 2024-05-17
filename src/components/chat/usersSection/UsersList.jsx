@@ -5,6 +5,7 @@ import { changeChatUser, changeUser, selectChatUser } from '../../../features/ch
 import { selectUser } from '../../../features/user/userSlice'
 import { selectAllUsers } from '../../../features/users/usersSlice'
 import { changeMessagesView } from '../../../features/ViewMessages/viewMessagesSlice'
+import { getPhoto } from '../../../firebase'
 import MainLoading from '../../Loading/MainLoading'
 import UsersPhoto from '../../user/UsersPhoto'
 import ScrollList from '../ScrollList'
@@ -38,6 +39,7 @@ function UsersList() {
        dispatch(changeChatUser(user[0]))
     
   }
+
 
   useEffect(() => {
     if (users.length > 0 && !chatUser) {

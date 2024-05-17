@@ -426,6 +426,10 @@ export const savePhoto = async (photo) => {
     await updateProfile(auth.currentUser,{
       photoURL:savedPhoto
     })
+    const userDoc = doc(db,'users',auth.currentUser.uid)
+    await updateDoc(userDoc,{
+      photoUrl:savedPhoto
+    })
     console.log('image uploaded successfully')
     return savedPhoto
   } catch (err) {
@@ -461,3 +465,13 @@ export {
 }
 
 export default app
+
+
+
+
+
+
+
+
+
+
