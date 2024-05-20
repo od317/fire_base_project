@@ -13,10 +13,12 @@ function SignUp() {
           try{
           console.log('starting to signUp')
           let res = await handleSingInForm(name,email,password)
-          if(res) navigate('/')
+          if(res.length === null) navigate('/')
+          return res
           }
           catch(err){
-            console.log(err)
+            console.log(err.message)
+            return res
           }
       }
 

@@ -9,7 +9,7 @@ import { auth } from '../../../firebase'
 import MessageInput from './MessageInput'
 import MessagesList from './MessagesList'
 import { selectUser } from '../../../features/user/userSlice'
-import MainLoading from '../../Loading/MainLoading'
+import MessagesLoading from '../../Loading/MessagesLoading'
 
 
 
@@ -95,13 +95,19 @@ function MessagesLayout({ }) {
      md:translate-x-[0%] md:w-[75%] md:relative md:pr-[0%] md:h-auto
     `}>
       {
-       !messagesStatus ?
+       !messagesStatus?
       <>
+      {
+      messages.length>0?
       <MessagesList />
+      :
+      <label className='flex flex-col items-center justify-center w-full h-full'>start a chat by sending a message</label>
+      }
+
       <MessageInput handleSendingMessage={SendingMessage} ></MessageInput>
       </>
       :
-      <MainLoading></MainLoading>
+      <MessagesLoading></MessagesLoading>
       }
       </div>
   )

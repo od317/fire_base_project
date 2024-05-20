@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUsers, selectAllUsers } from '../../../features/users/usersSlice'
+import { fetchUsers, selectAllUsers, selectUsersPending } from '../../../features/users/usersSlice'
 import UsersList from './UsersList'
 import { store } from '../../../store'
 import { db,collection, auth} from '../../../firebase'
@@ -28,6 +28,7 @@ function UsersLayout() {
 
   const dispatch = useDispatch()
   const users = useSelector(selectAllUsers)
+  const pending = useSelector(selectUsersPending)
 
   console.log('osdamd',users)
   useEffect(() => {
@@ -65,8 +66,9 @@ function UsersLayout() {
   return (
     <>
       { 
-      users.length>0 ?
-      <UsersList></UsersList>:
+       users.length>0?
+      <UsersList></UsersList>
+      :
       <UsersLoading/>
       }
     </>

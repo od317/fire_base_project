@@ -7,10 +7,10 @@ function Modal() {
 
   const dispatch = useDispatch()
   return (
-    <div className=' absolute w-[100%] h-[100%] flex items-center justify-center bg-black bg-opacity-40 z-[20] '>
-      <div className='w-[30%] h-[80%] flex flex-col bg-c1 '>
+    <div className=' absolute w-[100%] h-[100%] flex items-center rounded-sm justify-center bg-black bg-opacity-40 z-[20] '>
+      <div className=' w-[90%] md:w-[35%] h-[80%] flex flex-col bg-bg1 rounded-t-sm '>
      
-        <div className='flex text-[110%] flex-row justify-between p-[2%]'>
+        <div className='flex text-[110%] flex-row bg-bg1 justify-between rounded-t-sm p-[4%]'>
           <label htmlFor="">search for users</label>
           <button onClick={() => {
             dispatch(changeModal(false))

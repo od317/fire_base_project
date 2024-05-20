@@ -30,7 +30,7 @@ for (let i = 0; i < 2; i++) {
 
 const initialState = {
     value: [],
-    pending:false
+    pending:true
 }
 
 export const messagesSlice = createSlice({
@@ -72,7 +72,11 @@ export const messagesSlice = createSlice({
             })
             .addCase(getMessages.fulfilled,(state,action)=>{
                 // console.log('get messages succ',action.payload)
+                state.pending = false
                 state.value = action.payload
+            })
+            .addCase(getMessages.pending,(state,action)=>{
+                state.pending = true
             }) 
             .addCase(removeMessage.fulfilled,(state,action)=>{
                 console.log('messages removed succ')

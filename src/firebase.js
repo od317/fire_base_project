@@ -90,7 +90,7 @@ export const handleSingInForm = async (name, email, password) => {
     return user
   } catch (err) {
     console.log('error is ', err.message)
-    return false
+    return err.message
   }
 }
 
@@ -106,34 +106,38 @@ export const handleLogInForm = async (email, password) => {
 }
 
 export const getAllUsers = async () => {
+
   let filterdData = []
-  try {
-    const connections = await getConnections()
-    const friends = await getFriends(connections)
+  const connections = await getConnections()
+  const ids =  connections.map((c)=>{
+    return c.id
+  })
+  const friends = await getFriends(ids)
 
-
-    if (connections.length > 0) {
-      const q = query(usersRef,
-        where('__name__', 'in', connections)
-      )
-      const data = await getDocs(q)
-      filterdData = data.docs.map((doc) => {
-        return {
-          ...doc.data(),
-          id: doc.id
-        }
+  if (connections.length > 0) {
+    const q = query(usersRef,
+      where('__name__', 'in', ids)
+    )
+    const data = await getDocs(q)
+    filterdData = data.docs.map((doc) => {
+      let lastMessage = ''
+      connections.forEach((v,i)=>{
+          if(v.id === doc.id)
+             lastMessage = v.lastMessage
       })
-      filterdData = filterdData.filter((doc) => {
-        return doc.id !== auth.currentUser.uid
-      })
+      return {
+        ...doc.data(),
+        lastMessage,
+        id: doc.id
+      }
+    })
+    filterdData = filterdData.filter((doc) => {
+      return doc.id !== auth.currentUser.uid
+    })
 
-    }
-    filterdData = [...filterdData, ...friends]
-  } catch (err) {
-    console.log('nope' + err)
-  } finally {
-    return filterdData
   }
+  filterdData = [...filterdData, ...friends]
+  return filterdData
 }
 
 
@@ -149,9 +153,9 @@ export const sendMessageF = async (message) => {
 
   try {
 
-    addFriend(s_id, r_id)
-    addConnection(s_id, r_id)
-
+    await addFriend(s_id, r_id)
+    await addConnection(s_id, r_id)
+    await editLastMessage(s_id,r_id,message.content)
   } catch (err) {
   } finally {
     return message
@@ -315,59 +319,53 @@ export const addConnection = async (s_id, d_id) => {
 }
 
 export const getFriends = async (connections) => {
-  try {
-    const userRef = doc(db, 'users', auth.currentUser.uid)
-    let userData = await getDoc(userRef)
-    userData = userData.data().friends
-    let filterdData
-    const q = query(usersRef,
-      where('__name__', 'in', userData)
-    )
-    let res = await getDocs(q)
-    filterdData = res.docs.map((doc) => {
-      return {
-        ...doc.data(),
-        id: doc.id
-      }
-    })
-    filterdData = filterdData.filter((doc) => {
-      return !connections.includes(doc.id)
-    })
-    return filterdData
-  } catch (err) {
-    console.log('cant get user freinds', err)
-    return []
-  }
+  const userRef = doc(db, 'users', auth.currentUser.uid)
+  let userData = await getDoc(userRef)
+  userData = userData.data().friends
+  let filterdData
+  const q = query(usersRef,
+    where('__name__', 'in', userData)
+  )
+  let res = await getDocs(q)
+  filterdData = res.docs.map((doc) => {
+    return {
+      ...doc.data(),
+      id: doc.id
+    }
+  })
+  filterdData = filterdData.filter((doc) => {
+    return !connections.includes(doc.id)
+  })
+  return filterdData
 }
 
 export const getConnections = async () => {
-  try {
-    const id = auth.currentUser.uid
-    const connectionsRef = collection(db, 'connections')
-    const q = query(connectionsRef,
-      or(
-        where('u1', '==', id),
-        where('u2', '==', id)
-      ))
-    const res = await getDocs(q)
-    let data = res.docs.map((doc) => {
+  const id = auth.currentUser.uid
+  const connectionsRef = collection(db, 'connections')
+  const q = query(connectionsRef,
+    or(
+      where('u1', '==', id),
+      where('u2', '==', id)
+    ))
+  const res = await getDocs(q)
+  let data = res.docs.map((doc) => {
+    return {
+      ...doc.data(),
+      id: doc.id
+    }
+  })
+
+  data = data.map((doc) => {
+    if (doc.u1 == id)
       return {
-        ...doc.data(),
-        id: doc.id
-      }
-    })
+        id:doc.u2,
+        lastMessage:doc.lastMessage}
+    return {
+      id:doc.u1,
+      lastMessage:doc.lastMessage}
+  })
 
-    data = data.map((doc) => {
-      if (doc.u1 == id)
-        return doc.u2
-      return doc.u1
-    })
-
-    return data
-  } catch (err) {
-    console.log('errsssssssss', err)
-    return []
-  }
+  return data
 }
 
 export const changeName = async (newName) => {
@@ -423,12 +421,12 @@ export const savePhoto = async (photo) => {
     const photoRef = ref(storage, `images/${auth.currentUser.uid}`)
     await uploadBytes(photoRef, photo)
     const savedPhoto = await getPhoto(`images/${auth.currentUser.uid}`)
-    await updateProfile(auth.currentUser,{
-      photoURL:savedPhoto
+    await updateProfile(auth.currentUser, {
+      photoURL: savedPhoto
     })
-    const userDoc = doc(db,'users',auth.currentUser.uid)
-    await updateDoc(userDoc,{
-      photoUrl:savedPhoto
+    const userDoc = doc(db, 'users', auth.currentUser.uid)
+    await updateDoc(userDoc, {
+      photoUrl: savedPhoto
     })
     console.log('image uploaded successfully')
     return savedPhoto
@@ -438,7 +436,7 @@ export const savePhoto = async (photo) => {
 }
 
 export const getPhoto = async (path) => {
-  const photoRef = ref(storage,path)
+  const photoRef = ref(storage, path)
   const photo = await getDownloadURL(photoRef)
   return photo
 }
@@ -452,6 +450,27 @@ export const getPhoto = async (path) => {
 //         })
 // })
 
+async function editLastMessage(sId, rId,message) {
+  try{
+  const connectionsRef = collection(db, 'connections')
+  const q = query(
+    connectionsRef,
+    or(
+      where('value', '==', "" + sId + rId),
+      where('value', '==', "" + rId + sId),
+    )
+  )
+  const docs = await getDocs(q)
+  const docRef = docs.docs[0].ref
+  await updateDoc(docRef, {
+    lastMessage: message
+  })
+  console.log('last message updated succssefully')
+  }catch(err){
+    console.log('error updating last message',err)
+  }
+  
+}
 
 
 

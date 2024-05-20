@@ -21,7 +21,7 @@ function Nav({children}) {
 
     return (
     <>
-    <nav className=' z-[10] border-b-white whitespace-nowrap  mb-[0%]
+    <nav className=' z-[10]  fixed w-full  bg-bg1 whitespace-nowrap  
      '>
          <UserInfo user={user}></UserInfo>
          {/* { screenW < 786 && <UserInfo user={chatUser} chat={true}></UserInfo>} */}

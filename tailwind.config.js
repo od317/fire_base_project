@@ -8,10 +8,10 @@ export default {
   ],  theme: {
     extend: {
       colors:{
-        'bg1':'#5356FF',
-        'c1':'#378CE7',
-        'c2':'#67C6E3',
-        'c3':'#DFF5FF'
+        'bg1':'#252525',
+        'c1':'#6930C3',
+        'c2':'#1DB9C3',
+        'c3':'#1DB9C3'
       },
       keyframes:{
         popOut:{

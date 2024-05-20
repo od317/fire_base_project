@@ -17,7 +17,8 @@ import { getAllUsers } from "../../firebase"
 // }
 
 const initialState = {
-    value:[]
+    value:[],
+    pending:false
 }
 
 
@@ -31,13 +32,22 @@ export const usersSlice = createSlice({
     initialState,
     reducers:{},
     extraReducers(builder){
-        builder.addCase(fetchUsers.fulfilled,(state,action)=>{
+        builder.addCase(fetchUsers.pending,(state,action)=>{
+            state.pending = false
+        }).
+        addCase(fetchUsers.fulfilled,(state,action)=>{
                console.log('all users fetched',action.payload)
                state.value = action.payload
-        })
+               state.pending = false
+        }).
+        addCase(fetchUsers.rejected,(state,action)=>{
+               console.log('rejected')
+               state.pending = false
+
+     })
     }
 })
 
 export const selectAllUsers = (state) => state.users.value
-
+export const selectUsersPending = (state) => state.users.pending
 export default usersSlice.reducer

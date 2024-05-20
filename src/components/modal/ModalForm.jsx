@@ -14,7 +14,7 @@ function ModalForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='flex flex-row text-black p-[1%] flex-grow'>
+    <form onSubmit={handleSubmit} className='flex flex-row text-black bg-c1 rounded-b-sm p-[2%] flex-grow'>
           <input placeholder='enter user name' name='search' className='w-[80%] placeholder:text-white text-white  p-[1%] bg-c1' type="text" />
           <button className='w-[20%] flex items-center justify-center'>
           <svg

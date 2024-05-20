@@ -36,6 +36,7 @@ export default function App(){
     setLoadingForUser(true)
     
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoadingForUser(true)
       if(user){
       
         await addUserToDb(user)
@@ -52,7 +53,7 @@ export default function App(){
 
         await changeOnlineStatus(user,true)
 
-        // navigate('/')
+        navigate('/')
 
       }
       
@@ -73,6 +74,7 @@ export default function App(){
     return () => {
       window.removeEventListener('beforeunload',pageLeave)
       unsubscribe()
+      changeOnlineStatus(auth.currentUser,false)
     }
  
   },[])

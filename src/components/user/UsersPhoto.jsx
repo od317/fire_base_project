@@ -10,7 +10,7 @@ function UsersPhoto({photo,status}) {
     }
  
     return (
-    <button  className='relative w-[15%] pb-[15%] rounded-full bg-gray-800 bg-opacity-30'>
+    <button  className='relative w-[20%] pb-[20%] rounded-full mr-[2%] bg-gray-800 bg-opacity-30'>
     <img className='absolute rounded-full w-full h-full' src={imgSrc} onError={handleError} alt="" />
     {status &&
     <div className='w-full h-full flex absolute items-end justify-end'>           

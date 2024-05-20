@@ -4,42 +4,31 @@ import { selectUser } from '../../features/user/userSlice'
 import { selectAllUsers } from '../../features/users/usersSlice'
 import { getReco, selectUsersSearch } from '../../features/usersSearch/usersSearchSlice'
 import { addFriend, auth } from '../../firebase'
+import User from './User'
 import { store } from '../../store'
 import MainLoading from '../Loading/MainLoading'
+import { async } from '@firebase/util'
 
 
 function UList() {
 
-  const users = useSelector(selectUsersSearch)
-
-  const chatUsers = useSelector(selectAllUsers)
-
+  let users = useSelector(selectUsersSearch)
   const user = useSelector(selectUser)
 
   const dispatch = useDispatch()
-  
-  const addToChat = async (id)=>{
-        await addFriend(user.uid,id)
+
+  const addToChat = async (id) => {
+    await addFriend(user.uid, id)
   }
 
-  const checkId = async (id)=>{
-        var res = false
-        if(chatUsers && chatUsers.length>0)
-        await chatUsers.forEach((doc)=>{
-          if(doc.id === id){
-            res=true
-          }
-        })
-        console.log(id,res)
-        return res
-  }
 
   useEffect(() => {
     dispatch(getReco())
   }, [])
 
+
   return (
-    <div className=' h-[80%] max-h-[80%] p-[%] overflow-y-scroll '>
+    <div className=' h-[80%] max-h-[80%] scroll  overflow-y-scroll '>
 
       {
         users.error ?
@@ -55,20 +44,16 @@ function UList() {
             users.value.length > 0 ?
               <>
                 {users.value.map((v, i) => {
-                  return(
-                  <div key={v.id} className='flex flex-row justify-between p-[5%] my-[5%]'>
-                    <label htmlFor="">
-                      {v.name || v.displayName}
-                    </label>
-                    {(v.id !== user.uid && checkId(v.id) ) &&
-                    <button onClick={()=>addToChat(v.id)} className='bg-c2 p-[1%] rounded-md'>add to chat</button>
-                    }
+                  return (
+                    <div key={v.id} className='flex flex-row justify-between p-[5%] my-[5%]'>
+                      <User v={v} addToChat={addToChat}></User>
                     </div>
-                )})}
+                  )
+                })}
               </>
               :
               <>
-                <label htmlFor="">no users found</label>
+                <label className='p-[4%]' htmlFor="">no users found</label>
               </>
       }
 

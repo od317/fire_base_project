@@ -9,6 +9,8 @@ import { selectViewMessages } from '../features/ViewMessages/viewMessagesSlice'
 import Modal from '../components/modal/Modal'
 import { selectModal } from '../features/modal/modalSlice'
 import {selectScreenWidth} from '../features/screenWidth/screenWidth'
+import { selectAllUsers, selectUsersPending } from '../features/users/usersSlice'
+import NewUser from '../components/newUser/newUser'
 
 function Chat() {
 
@@ -18,7 +20,8 @@ function Chat() {
     const id = searchParams.get('chatUser')
     const screenWidth = useSelector(selectScreenWidth)
     const user = useSelector(selectUser)
-
+    const users = useSelector(selectAllUsers)
+    const pending = useSelector(selectUsersPending)
     const viewMessages = useSelector(selectViewMessages)
 
 
@@ -36,10 +39,12 @@ function Chat() {
     <>
     
     <div className={` 
-    max-h-screen  overflow-x-hidden  z-[2] relative flex-grow
+    max-h-screen  overflow-x-hidden pt-[15%] md:pt-[5%] z-[2] relative flex-grow
     md:flex md:flex-row-reverse overflow-y-hidden w-full
     `}>
-      { screenWidth>= 768 ?
+      { 
+      true ?
+      screenWidth>= 768 ?
         <>
         <MessagesLayout />
         <UsersLayout />
@@ -49,6 +54,8 @@ function Chat() {
         <MessagesLayout />
         :
         <UsersLayout />
+        :
+        <NewUser></NewUser>
       }
       </div>
     

@@ -1,5 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { selectChatUser } from '../../features/chatUser/chatUser'
 import { changeModal } from '../../features/modal/modalSlice'
 import { selectScreenWidth } from '../../features/screenWidth/screenWidth'
 import { changeMessagesView, selectViewMessages } from '../../features/ViewMessages/viewMessagesSlice'
@@ -11,18 +13,23 @@ function UserInfo({ user, chat }) {
    const viewMessages = useSelector(selectViewMessages)
    const screenW = useSelector(selectScreenWidth)
    const dispatch = useDispatch()
+   const navigate = useNavigate()
+
+   const chatUser = useSelector(selectChatUser)
+   const [searchParams,setSearchParams] = useSearchParams()
+   const chatUserId = searchParams.get('chatUser')
 
    return (
       <div
          // style={{ transform: `${viewMessages && screenW <768? 'translateX(-100%)' : ''}` }}
-         className='w-[100%] border-b-[1px] relative transition-all  duration-200 max-w-screen inline-block '>
+         className='w-[98%] pb-[1%] border-b-[2px] border-b-c1 relative transition-all  duration-200 max-w-screen inline-block '>
          <div className='pb-[2%] flex flex-row  justify-between
          md:justify-start md:items-center md:space-x-5 md:pb-[.2%]'>
 
-            {!chat ?
+            {!(chatUserId && chatUserId.length>0)|| screenW >= 768 ?
                <>
                   <UserPhoto photo={user?.photo} />
-                  <label className=' hidden md:block' htmlFor="">{user?.displayName || user?.name}</label>
+                  <label className=' hidden md:block ' htmlFor="">{user?.displayName || user?.name}</label>
 
                   <button
                   onClick={()=>{
@@ -40,14 +47,12 @@ function UserInfo({ user, chat }) {
 
                </>
                :
-               <div className='w-[100%] flex flex-row
+               <div className='w-[100%] flex flex-row justify-between
                  '>
-                  <div className='md:w-[0%] absolute md:h-[0%]'>
-                      <UsersPhoto photo={user?.photo} status={true}/>
-                  </div>
+                  <UserPhoto photo={chatUser?.photoUrl} />
                   <button
                      onClick={() => {
-                        dispatch(changeMessagesView(false))
+                        navigate(-1)
                      }
                      }
                   >

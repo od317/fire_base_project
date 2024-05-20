@@ -26,20 +26,22 @@ const UserPhoto = ({ photo }) => {
 
   return (
     <>
-      <div ref={optionsRef}  className='relative w-[15%] pb-[15%] rounded-full bg-gray-800 bg-opacity-30
+      <div ref={optionsRef}  className='relative w-[15%]  pb-[15%] rounded-full bg-gray-800 bg-opacity-30
                                         md:w-[3%] md:pb-[3%]'>
-        <img className='absolute rounded-full w-full h-full' src={imgSrc} onError={handleError} alt="" />
+        <div className=' absolute w-full h-full overflow-hidden rounded-full'>
+           <img className='absolute rounded-full min-w-full min-h-full' src={imgSrc} onError={handleError} alt="" />
+        </div>
         <div className={` ${showOptions ? ' scale-1 ' : 'scale-0'} w-[300%] translate-y-[40%] z-[20] transition-all duration-200  origin-top-left 
           flex items-center p-[20%] flex-col absolute justify-evenly  bg-c1 translate-x-[0%]`}>
           <button onClick={() => {
             logout()
-          }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>logout</button>
+          }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c1 hover:border-white transition-all duration-200 w-full'>logout</button>
           <button onClick={()=>{
              navigate('/settings')
-          }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>settings</button>
+          }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c1 hover:border-white transition-all duration-200 w-full'>settings</button>
           <button onClick={() => {
             setShowOptions(false)
-          }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c3 w-full'>close</button>
+          }} className='border-b-[1px] text-start pb-[2%] m-[5%]  border-b-c1 hover:border-white transition-all duration-200 w-full'>close</button>
         </div>
 
       </div>

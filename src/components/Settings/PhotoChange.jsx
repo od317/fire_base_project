@@ -3,13 +3,16 @@ import { useDispatch } from 'react-redux'
 import { updatePhoto } from '../../features/user/userSlice'
 import { savePhoto } from '../../firebase'
 
-function PhotoChange({setMessage}) {
+function PhotoChange({loading,setLoading,setMessage}) {
 
     const [photo, setPhoto] = useState(null)
-    const [photoLoading, setPhotoLoading] = useState(false)
     const dispatch = useDispatch()
      
     const changePhoto = async (e) => {
+        if(loading){
+            return
+        }
+        setLoading(true)
         setMessage('')
         try{
         e.preventDefault()
@@ -27,6 +30,9 @@ function PhotoChange({setMessage}) {
         setMessage('photo chagned successfully')
         }catch(err){
             console.log(err)
+        }
+        finally{
+            setLoading(false)
         }
     }
 

@@ -53,12 +53,11 @@ function UsersList() {
 
   return (
     <>
-      {!users || users.length > 0 ?
         <ScrollList>
           {users.map((item, i) => {
             if (item.id !== user?.uid)
               return (
-                <div key={i} className='w-full'>
+                <div key={item.id} className='w-full'>
                   <div onClick={() => {
                     dispatch(changeMessagesView(true))
                     dispatch(changeUser(item))
@@ -80,9 +79,6 @@ function UsersList() {
           })
           }
         </ScrollList>
-        :
-        <MainLoading></MainLoading>
-      }
     </>
   )
 }
