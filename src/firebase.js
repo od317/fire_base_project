@@ -4,10 +4,8 @@ import { getAnalytics } from "firebase/analytics"
 import { getAuth } from "firebase/auth"
 import { getFirestore, addDoc, collection, getDocs, getDoc, updateDoc, doc, onSnapshot, deleteDoc, query, orderBy, serverTimestamp, setDoc, and, limit, startAt, endAt } from 'firebase/firestore'
 import { getDownloadURL, getStorage, list, listAll, ref, uploadBytes } from 'firebase/storage'
-import { v4 as uuid } from 'uuid'
 import { where, or } from "firebase/firestore"
 import { arrayUnion } from "firebase/firestore"
-
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -109,7 +107,7 @@ export const getAllUsers = async () => {
 
   let filterdData = []
   const connections = await getConnections()
-  const ids =  connections.map((c)=>{
+  const ids = connections.map((c) => {
     return c.id
   })
   const friends = await getFriends(ids)
@@ -120,10 +118,10 @@ export const getAllUsers = async () => {
     )
     const data = await getDocs(q)
     filterdData = data.docs.map((doc) => {
-      let lastMessage = ''
-      connections.forEach((v,i)=>{
-          if(v.id === doc.id)
-             lastMessage = v.lastMessage
+      let lastMessage = null
+      connections.forEach((v, i) => {
+        if (v.id === doc.id)
+          lastMessage = v.lastMessage
       })
       return {
         ...doc.data(),
@@ -137,6 +135,22 @@ export const getAllUsers = async () => {
 
   }
   filterdData = [...filterdData, ...friends]
+  
+  filterdData = filterdData.sort((a, b) => {
+    if (a.lastMessage && b.lastMessage) {
+      return new Date(b.lastMessage.date) - new Date(a.lastMessage.date);
+    }
+
+    if (a.lastMessage) {
+      return -1;
+    }
+
+    if (b.lastMessage) {
+      return 1;
+    }
+
+    return 0;
+  })
   return filterdData
 }
 
@@ -155,7 +169,11 @@ export const sendMessageF = async (message) => {
 
     await addFriend(s_id, r_id)
     await addConnection(s_id, r_id)
-    await editLastMessage(s_id,r_id,message.content)
+    await editLastMessage(s_id, r_id,
+      {
+        content: message.content,
+        date: message.createdAt
+      })
   } catch (err) {
   } finally {
     return message
@@ -358,11 +376,13 @@ export const getConnections = async () => {
   data = data.map((doc) => {
     if (doc.u1 == id)
       return {
-        id:doc.u2,
-        lastMessage:doc.lastMessage}
+        id: doc.u2,
+        lastMessage: doc.lastMessage
+      }
     return {
-      id:doc.u1,
-      lastMessage:doc.lastMessage}
+      id: doc.u1,
+      lastMessage: doc.lastMessage
+    }
   })
 
   return data
@@ -450,26 +470,26 @@ export const getPhoto = async (path) => {
 //         })
 // })
 
-async function editLastMessage(sId, rId,message) {
-  try{
-  const connectionsRef = collection(db, 'connections')
-  const q = query(
-    connectionsRef,
-    or(
-      where('value', '==', "" + sId + rId),
-      where('value', '==', "" + rId + sId),
+async function editLastMessage(sId, rId, message) {
+  try {
+    const connectionsRef = collection(db, 'connections')
+    const q = query(
+      connectionsRef,
+      or(
+        where('value', '==', "" + sId + rId),
+        where('value', '==', "" + rId + sId),
+      )
     )
-  )
-  const docs = await getDocs(q)
-  const docRef = docs.docs[0].ref
-  await updateDoc(docRef, {
-    lastMessage: message
-  })
-  console.log('last message updated succssefully')
-  }catch(err){
-    console.log('error updating last message',err)
+    const docs = await getDocs(q)
+    const docRef = docs.docs[0].ref
+    await updateDoc(docRef, {
+      lastMessage: message
+    })
+    console.log('last message updated succssefully')
+  } catch (err) {
+    console.log('error updating last message', err)
   }
-  
+
 }
 
 

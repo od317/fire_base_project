@@ -29,7 +29,7 @@ function UserInfo({ user, chat }) {
             {!(chatUserId && chatUserId.length>0)|| screenW >= 768 ?
                <>
                   <UserPhoto photo={user?.photo} />
-                  <label className=' hidden md:block ' htmlFor="">{user?.displayName || user?.name}</label>
+                  <label className=' hidden md:block flex-grow ' htmlFor="">{user?.displayName || user?.name}</label>
 
                   <button
                   onClick={()=>{
@@ -39,8 +39,8 @@ function UserInfo({ user, chat }) {
                      <svg
                         viewBox="0 0 24 24"
                         fill="currentColor"
-                        height="1em"
-                        width="1em">
+                        height="2em"
+                        width="2em">
                         <path d="M10 18a7.952 7.952 0 004.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0018 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z" />
                      </svg>
                   </button>
@@ -49,7 +49,9 @@ function UserInfo({ user, chat }) {
                :
                <div className='w-[100%] flex flex-row justify-between
                  '>
-                  <UserPhoto photo={chatUser?.photoUrl} />
+                  <div className='w-[20%] pb-[20%] relative'>
+                     <img className=' absolute min-w-full min-h-full rounded-full' src={chatUser?.photoUrl? chatUser.photoUrl:'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg'} alt="" />
+                  </div>
                   <button
                      onClick={() => {
                         navigate(-1)

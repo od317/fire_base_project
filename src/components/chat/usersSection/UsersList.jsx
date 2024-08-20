@@ -34,10 +34,10 @@ function UsersList() {
     let user = users.filter((user) => {
       return user.id === id
     })
-    
-    if(user.length>0)
-       dispatch(changeChatUser(user[0]))
-    
+
+    if (user.length > 0)
+      dispatch(changeChatUser(user[0]))
+
   }
 
 
@@ -48,37 +48,37 @@ function UsersList() {
   }, [users])
 
   useEffect(() => {
-     changeChatUserP()
+    changeChatUserP()
   }, [searchParams])
 
   return (
     <>
-        <ScrollList>
-          {users.map((item, i) => {
-            if (item.id !== user?.uid)
-              return (
-                <div key={item.id} className='w-full'>
-                  <div onClick={() => {
-                    dispatch(changeMessagesView(true))
-                    dispatch(changeUser(item))
-                    changeUserSeacrhUrl(item.id)
-                  }}
-                    className={`flex flex-row p-[2%] my-[3%] 
+      <ScrollList>
+        {users.map((item, i) => {
+          if (item.id !== user?.uid)
+            return (
+              <div key={item.id} className='w-full'>
+                <div onClick={() => {
+                  dispatch(changeUser(item))
+                  changeUserSeacrhUrl(item.id)
+                  dispatch(changeMessagesView(true))
+                }}
+                  className={`flex flex-row p-[2%] my-[3%] 
         ${chatUser?.id === item?.id ? 'bg-opacity-[50%]' : 'hover:bg-opacity-[20%]'}  
          bg-opacity-0 bg-zinc-900  transition-all  duration-200  cursor-pointer rounded-md`}>
-                    <UsersPhoto photo={item.photo || item.photoUrl} status={item.online} />
-                    <div className='flex flex-col flex-grow px-[2%] items-start justify-start'>
-                      <p className='font-bold text-[120%]
+                  <UsersPhoto photo={item.photo || item.photoUrl} status={item.online} />
+                  <div className='flex flex-col flex-grow px-[2%] items-start justify-start'>
+                    <p className='font-bold text-[120%]
                                      md:text-[100%]'>{item.name}</p>
-                      <p className='text-gray-300
-                                       md:text-[90%]'>{item.lastMessage}</p>
-                    </div>
-                    <label htmlFor="">{item.date}</label>
+                    <p className='text-gray-300
+                                       md:text-[90%]'>{item.lastMessage?.content}</p>
                   </div>
-                </div>)
-          })
-          }
-        </ScrollList>
+                  <label htmlFor="">{item.date}</label>
+                </div>
+              </div>)
+        })
+        }
+      </ScrollList>
     </>
   )
 }
